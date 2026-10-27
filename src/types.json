@@ -1,0 +1,759 @@
+{
+  "reminder": {
+    "label": "提醒",
+    "items": [
+      {
+        "id": "reminder-1",
+        "name": "外驱"
+      },
+      {
+        "id": "reminder-2",
+        "name": "喂食"
+      },
+      {
+        "id": "reminder-3",
+        "name": "内驱"
+      },
+      {
+        "id": "reminder-4",
+        "name": "狂犬疫苗"
+      },
+      {
+        "id": "reminder-5",
+        "name": "猫三联疫苗"
+      },
+      {
+        "id": "reminder-6",
+        "name": "洗澡"
+      },
+      {
+        "id": "reminder-7",
+        "name": "铲屎"
+      },
+      {
+        "id": "reminder-8",
+        "name": "医疗"
+      },
+      {
+        "id": "reminder-9",
+        "name": "检查耳道"
+      },
+      {
+        "id": "reminder-10",
+        "name": "刷牙"
+      },
+      {
+        "id": "reminder-11",
+        "name": "训练"
+      },
+      {
+        "id": "reminder-12",
+        "name": "遛宠"
+      },
+      {
+        "id": "reminder-13",
+        "name": "剪指甲"
+      },
+      {
+        "id": "reminder-14",
+        "name": "罐头零食"
+      },
+      {
+        "id": "reminder-15",
+        "name": "体检"
+      },
+      {
+        "id": "reminder-16",
+        "name": "玩具"
+      },
+      {
+        "id": "reminder-17",
+        "name": "绝育"
+      },
+      {
+        "id": "reminder-18",
+        "name": "服饰装饰"
+      },
+      {
+        "id": "reminder-19",
+        "name": "寄养"
+      },
+      {
+        "id": "reminder-20",
+        "name": "买猫粮"
+      },
+      {
+        "id": "reminder-21",
+        "name": "买猫砂"
+      },
+      {
+        "id": "reminder-22",
+        "name": "保险"
+      },
+      {
+        "id": "reminder-23",
+        "name": "生日"
+      },
+      {
+        "id": "reminder-24",
+        "name": "狗四联"
+      },
+      {
+        "id": "reminder-25",
+        "name": "狗六联"
+      }
+    ]
+  },
+  "expense": {
+    "label": "记账",
+    "items": [
+      {
+        "id": "expense-1",
+        "name": "生骨肉"
+      },
+      {
+        "id": "expense-2",
+        "name": "宠物食品"
+      },
+      {
+        "id": "expense-3",
+        "name": "日常用品"
+      },
+      {
+        "id": "expense-4",
+        "name": "宠物玩具"
+      },
+      {
+        "id": "expense-5",
+        "name": "服饰"
+      },
+      {
+        "id": "expense-6",
+        "name": "洗澡"
+      },
+      {
+        "id": "expense-7",
+        "name": "美容"
+      },
+      {
+        "id": "expense-8",
+        "name": "营养保健"
+      },
+      {
+        "id": "expense-9",
+        "name": "清洁用品"
+      },
+      {
+        "id": "expense-10",
+        "name": "洗护用品"
+      },
+      {
+        "id": "expense-11",
+        "name": "生病"
+      },
+      {
+        "id": "expense-12",
+        "name": "驱虫"
+      },
+      {
+        "id": "expense-13",
+        "name": "疫苗"
+      },
+      {
+        "id": "expense-14",
+        "name": "食具"
+      },
+      {
+        "id": "expense-15",
+        "name": "猫砂"
+      },
+      {
+        "id": "expense-16",
+        "name": "尿垫"
+      },
+      {
+        "id": "expense-17",
+        "name": "寄养"
+      },
+      {
+        "id": "expense-18",
+        "name": "绝育"
+      },
+      {
+        "id": "expense-19",
+        "name": "训练"
+      },
+      {
+        "id": "expense-20",
+        "name": "保险"
+      },
+      {
+        "id": "expense-21",
+        "name": "购买宠物"
+      },
+      {
+        "id": "expense-22",
+        "name": "养犬许可证明"
+      },
+      {
+        "id": "expense-23",
+        "name": "托运费"
+      },
+      {
+        "id": "expense-24",
+        "name": "冻干粮"
+      },
+      {
+        "id": "expense-25",
+        "name": "猫粮"
+      },
+      {
+        "id": "expense-26",
+        "name": "狗粮"
+      },
+      {
+        "id": "expense-27",
+        "name": "羊奶粉"
+      },
+      {
+        "id": "expense-28",
+        "name": "罐头"
+      },
+      {
+        "id": "expense-29",
+        "name": "自制宠饭"
+      },
+      {
+        "id": "expense-30",
+        "name": "零食"
+      },
+      {
+        "id": "expense-31",
+        "name": "宠窝"
+      },
+      {
+        "id": "expense-32",
+        "name": "宠物笼"
+      },
+      {
+        "id": "expense-33",
+        "name": "磨牙"
+      },
+      {
+        "id": "expense-34",
+        "name": "游玩"
+      },
+      {
+        "id": "expense-35",
+        "name": "钙片"
+      },
+      {
+        "id": "expense-36",
+        "name": "微量元素"
+      },
+      {
+        "id": "expense-37",
+        "name": "营养膏"
+      },
+      {
+        "id": "expense-38",
+        "name": "益生菌"
+      },
+      {
+        "id": "expense-39",
+        "name": "眼药水"
+      },
+      {
+        "id": "expense-40",
+        "name": "耳螨药"
+      },
+      {
+        "id": "expense-41",
+        "name": "药品"
+      },
+      {
+        "id": "expense-42",
+        "name": "摄影"
+      },
+      {
+        "id": "expense-43",
+        "name": "生育"
+      },
+      {
+        "id": "expense-44",
+        "name": "更换耗材"
+      },
+      {
+        "id": "expense-45",
+        "name": "二联"
+      },
+      {
+        "id": "expense-46",
+        "name": "四联"
+      },
+      {
+        "id": "expense-47",
+        "name": "五联"
+      },
+      {
+        "id": "expense-48",
+        "name": "六联"
+      },
+      {
+        "id": "expense-49",
+        "name": "八联"
+      },
+      {
+        "id": "expense-50",
+        "name": "三联"
+      }
+    ]
+  },
+  "symptom": {
+    "label": "体征",
+    "items": [
+      {
+        "id": "symptom-1",
+        "name": "打喷嚏"
+      },
+      {
+        "id": "symptom-2",
+        "name": "流鼻涕"
+      },
+      {
+        "id": "symptom-3",
+        "name": "咳嗽"
+      },
+      {
+        "id": "symptom-4",
+        "name": "流口水"
+      },
+      {
+        "id": "symptom-5",
+        "name": "呕吐"
+      },
+      {
+        "id": "symptom-6",
+        "name": "腹泻"
+      },
+      {
+        "id": "symptom-7",
+        "name": "软便"
+      },
+      {
+        "id": "symptom-8",
+        "name": "误食"
+      },
+      {
+        "id": "symptom-9",
+        "name": "发烧"
+      },
+      {
+        "id": "symptom-10",
+        "name": "抽搐"
+      },
+      {
+        "id": "symptom-11",
+        "name": "喘息异常"
+      },
+      {
+        "id": "symptom-12",
+        "name": "嗜睡"
+      },
+      {
+        "id": "symptom-13",
+        "name": "脱毛"
+      },
+      {
+        "id": "symptom-14",
+        "name": "红疹"
+      },
+      {
+        "id": "symptom-15",
+        "name": "抓挠"
+      },
+      {
+        "id": "symptom-16",
+        "name": "攻击"
+      },
+      {
+        "id": "symptom-17",
+        "name": "呲尿"
+      },
+      {
+        "id": "symptom-18",
+        "name": "发情"
+      },
+      {
+        "id": "symptom-19",
+        "name": "不进食"
+      },
+      {
+        "id": "symptom-20",
+        "name": "磨牙"
+      }
+    ]
+  },
+  "note": {
+    "label": "记事",
+    "items": [
+      {
+        "id": "note-1",
+        "name": "保险"
+      },
+      {
+        "id": "note-2",
+        "name": "铲屎"
+      },
+      {
+        "id": "note-3",
+        "name": "服饰装饰"
+      },
+      {
+        "id": "note-4",
+        "name": "罐头零食"
+      },
+      {
+        "id": "note-5",
+        "name": "寄养"
+      },
+      {
+        "id": "note-6",
+        "name": "检测耳道"
+      },
+      {
+        "id": "note-7",
+        "name": "剪指甲"
+      },
+      {
+        "id": "note-8",
+        "name": "绝育"
+      },
+      {
+        "id": "note-9",
+        "name": "狂犬疫苗"
+      },
+      {
+        "id": "note-10",
+        "name": "遛宠"
+      },
+      {
+        "id": "note-11",
+        "name": "买猫粮"
+      },
+      {
+        "id": "note-12",
+        "name": "买猫砂"
+      },
+      {
+        "id": "note-13",
+        "name": "猫三联疫苗"
+      },
+      {
+        "id": "note-14",
+        "name": "内驱"
+      },
+      {
+        "id": "note-15",
+        "name": "生日"
+      },
+      {
+        "id": "note-16",
+        "name": "刷牙"
+      },
+      {
+        "id": "note-17",
+        "name": "体检"
+      },
+      {
+        "id": "note-18",
+        "name": "外驱"
+      },
+      {
+        "id": "note-19",
+        "name": "玩具"
+      },
+      {
+        "id": "note-20",
+        "name": "喂食"
+      },
+      {
+        "id": "note-21",
+        "name": "洗澡"
+      },
+      {
+        "id": "note-22",
+        "name": "训练"
+      },
+      {
+        "id": "note-23",
+        "name": "医疗"
+      },
+      {
+        "id": "note-24",
+        "name": "磨牙"
+      },
+      {
+        "id": "note-25",
+        "name": "冻干粮"
+      },
+      {
+        "id": "note-26",
+        "name": "猫粮"
+      },
+      {
+        "id": "note-27",
+        "name": "狗粮"
+      },
+      {
+        "id": "note-28",
+        "name": "羊奶粉"
+      },
+      {
+        "id": "note-29",
+        "name": "自制主粮"
+      },
+      {
+        "id": "note-30",
+        "name": "罐头"
+      },
+      {
+        "id": "note-31",
+        "name": "牛奶"
+      },
+      {
+        "id": "note-32",
+        "name": "饼干"
+      },
+      {
+        "id": "note-33",
+        "name": "肉干"
+      },
+      {
+        "id": "note-34",
+        "name": "生骨肉"
+      },
+      {
+        "id": "note-35",
+        "name": "火腿肠"
+      },
+      {
+        "id": "note-36",
+        "name": "宠窝"
+      },
+      {
+        "id": "note-37",
+        "name": "梳毛"
+      },
+      {
+        "id": "note-38",
+        "name": "喂食"
+      },
+      {
+        "id": "note-39",
+        "name": "喝水"
+      },
+      {
+        "id": "note-40",
+        "name": "旅行"
+      },
+      {
+        "id": "note-41",
+        "name": "托运"
+      },
+      {
+        "id": "note-42",
+        "name": "撸毛"
+      },
+      {
+        "id": "note-43",
+        "name": "互动"
+      },
+      {
+        "id": "note-44",
+        "name": "玩具"
+      },
+      {
+        "id": "note-45",
+        "name": "益智"
+      },
+      {
+        "id": "note-46",
+        "name": "球球"
+      },
+      {
+        "id": "note-47",
+        "name": "逗猫棒"
+      },
+      {
+        "id": "note-48",
+        "name": "钙片"
+      },
+      {
+        "id": "note-49",
+        "name": "软磷脂"
+      },
+      {
+        "id": "note-50",
+        "name": "营养膏"
+      },
+      {
+        "id": "note-51",
+        "name": "微量元素"
+      },
+      {
+        "id": "note-52",
+        "name": "维生素"
+      },
+      {
+        "id": "note-53",
+        "name": "保健品"
+      },
+      {
+        "id": "note-54",
+        "name": "体检"
+      },
+      {
+        "id": "note-55",
+        "name": "生病"
+      },
+      {
+        "id": "note-56",
+        "name": "疫苗"
+      },
+      {
+        "id": "note-57",
+        "name": "狂犬疫苗"
+      },
+      {
+        "id": "note-58",
+        "name": "驱虫药"
+      },
+      {
+        "id": "note-59",
+        "name": "药品"
+      },
+      {
+        "id": "note-60",
+        "name": "益生菌"
+      },
+      {
+        "id": "note-61",
+        "name": "生育"
+      },
+      {
+        "id": "note-62",
+        "name": "交配"
+      },
+      {
+        "id": "note-63",
+        "name": "绝育"
+      },
+      {
+        "id": "note-64",
+        "name": "眼睛"
+      },
+      {
+        "id": "note-65",
+        "name": "耳螨"
+      },
+      {
+        "id": "note-66",
+        "name": "皮肤病"
+      },
+      {
+        "id": "note-67",
+        "name": "剃脚毛"
+      },
+      {
+        "id": "note-68",
+        "name": "美容"
+      },
+      {
+        "id": "note-69",
+        "name": "摄影"
+      },
+      {
+        "id": "note-70",
+        "name": "上厕所"
+      },
+      {
+        "id": "note-71",
+        "name": "换猫砂"
+      },
+      {
+        "id": "note-72",
+        "name": "100天"
+      },
+      {
+        "id": "note-73",
+        "name": "办理狗证"
+      },
+      {
+        "id": "note-74",
+        "name": "出游"
+      },
+      {
+        "id": "note-75",
+        "name": "大扫除"
+      },
+      {
+        "id": "note-76",
+        "name": "到家日"
+      },
+      {
+        "id": "note-77",
+        "name": "称体重"
+      },
+      {
+        "id": "note-78",
+        "name": "生理期"
+      },
+      {
+        "id": "note-79",
+        "name": "更换耗材"
+      },
+      {
+        "id": "note-80",
+        "name": "清洁"
+      },
+      {
+        "id": "note-81",
+        "name": "二联"
+      },
+      {
+        "id": "note-82",
+        "name": "四联"
+      },
+      {
+        "id": "note-83",
+        "name": "五联"
+      },
+      {
+        "id": "note-84",
+        "name": "六联"
+      },
+      {
+        "id": "note-85",
+        "name": "八联"
+      }
+    ]
+  },
+  "stock": {
+    "label": "囤货",
+    "items": [
+      {
+        "id": "stock-1",
+        "name": "食品"
+      },
+      {
+        "id": "stock-2",
+        "name": "药品"
+      },
+      {
+        "id": "stock-3",
+        "name": "用具"
+      }
+    ]
+  }
+}

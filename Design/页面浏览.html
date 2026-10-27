@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>宠物生活 App · V1 高保真视觉原型</title>
+<style>
+:root{color-scheme:light;--bg:#FFF8F0;--card:#FFFEFC;--tint:#F8E6DA;--ink:#392D29;--muted:#75645C;--main:#A75535;--line:#EBDDD1;--shadow:0 14px 42px rgba(86,50,30,.09)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;font-size:14px}button,a{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid var(--main);outline-offset:3px}
+.app{display:grid;grid-template-columns:292px minmax(380px,1fr) 288px;min-height:100vh}.side{background:var(--card);border-right:1px solid var(--line);padding:26px 16px 20px;position:sticky;top:0;height:100vh;overflow-y:auto}.eyebrow{font-size:11px;letter-spacing:1px;color:var(--main);font-weight:750}.brand{font-size:23px;font-weight:780;line-height:1.3;margin:8px 0 8px}.subtitle{color:var(--muted);line-height:1.6;font-size:12px;margin:0 0 18px}.colorbar{display:flex;gap:5px;margin:14px 0 22px}.swatch{width:26px;height:26px;border-radius:10px;border:1px solid rgba(0,0,0,.05)}.group-label{font-weight:700;color:#92766B;margin:22px 10px 8px;font-size:11px}.nav{display:flex;flex-direction:column;gap:3px}.navbtn{border:1px solid transparent;background:transparent;padding:10px 12px;border-radius:13px;display:flex;gap:10px;align-items:center;text-align:left;color:var(--ink);width:100%}.navbtn .num{color:#A68C7F;width:20px;font-size:11px;font-variant-numeric:tabular-nums}.navbtn:hover{background:#FBF1E7}.navbtn.active{background:var(--tint);border-color:#EBC6B2;color:var(--main);font-weight:750}
+main{padding:26px 25px;min-width:0;text-align:center}.top{display:flex;justify-content:space-between;align-items:center;max-width:740px;margin:auto;text-align:left;gap:18px}.top h1{font-size:20px;margin:0}.top .meta{font-size:12px;color:var(--muted);margin-top:5px}.top-btns{display:flex;gap:8px}.pillbtn{background:#fff;border:1px solid var(--line);color:var(--ink);border-radius:100px;padding:9px 15px;white-space:nowrap;text-decoration:none}.pillbtn:hover{background:var(--tint)}.stage{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 190px);padding:24px 0 12px}.phone-image{width:min(350px,75vw);max-height:calc(100vh - 182px);object-fit:contain;filter:drop-shadow(0 20px 28px rgba(80,52,30,.12));border-radius:25px}.control{margin:8px auto 18px;display:flex;justify-content:center;align-items:center;gap:14px}.round{border:1px solid var(--line);background:var(--card);width:44px;height:44px;border-radius:50%;font-size:19px;color:var(--ink)}.counter{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:45px}.right{border-left:1px solid var(--line);padding:30px 21px;position:sticky;top:0;height:100vh;overflow-y:auto;background:#FFFBF6}.sectionlabel{font-size:11px;color:var(--main);font-weight:800;letter-spacing:1px}.ptitle{font-size:23px;font-weight:800;margin:7px 0}.description{color:var(--muted);font-size:13px;line-height:1.8;margin-top:7px}.chip{background:#F6E6D6;color:#8E4A2C;border-radius:9px;padding:5px 9px;display:inline-block;font-size:12px;font-weight:700;margin:6px 4px 0 0}.hr{border-top:1px solid var(--line);margin:22px 0}.smalltitle{font-size:13px;font-weight:750;margin:10px 0}.hint{color:#806B5F;line-height:1.8;font-size:12px}.action{display:block;text-align:center;background:var(--main);color:#fff;padding:13px 16px;border-radius:15px;font-weight:720;text-decoration:none;margin-top:16px}.action:hover{background:#8F4024}.footnote{font-size:11px;color:#9A8C82;line-height:1.7;margin-top:16px}
+.overviews{display:none;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;padding:20px 0}.overview{width:100%;border-radius:14px;box-shadow:var(--shadow)}body.board-mode .stage,body.board-mode .control{display:none}body.board-mode .overviews{display:grid}body.board-mode .right{opacity:.6}
+@media(max-width:1150px){.app{grid-template-columns:235px minmax(300px,1fr)}.right{display:none}.stage{min-height:calc(100vh - 190px)}}
+@media(max-width:700px){.app{grid-template-columns:1fr}.side{height:auto;position:static;padding:15px 16px;border-right:0;border-bottom:1px solid var(--line)}.brand{font-size:18px}.subtitle,.colorbar,.group-label,.nav{display:none}.side .eyebrow{font-size:10px}.top h1{font-size:18px}main{padding:17px 16px}.stage{min-height:auto;padding:15px 0 5px}.phone-image{width:min(96vw,390px);max-height:none}.top{align-items:start}.top-btns{gap:5px}.pillbtn{padding:9px 11px;font-size:12px}.overviews{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="eyebrow">V1 · HIGH-FIDELITY CONCEPT</div>
+  <div class="brand">宠物生活<br>页面视觉原型</div>
+  <p class="subtitle">暖奶油色 / Q 版毛绒公仔 / 4 Tab + 中央 ＋<br>M01–M13 候选 · 多宠筛选与列表层级已修订</p>
+  <div class="colorbar"><span class="swatch" style="background:#FFF8F0"></span><span class="swatch" style="background:#D58C67"></span><span class="swatch" style="background:#F0C2B2"></span><span class="swatch" style="background:#F3E4D2"></span><span class="swatch" style="background:#392D29"></span></div>
+  <div id="navlist"></div>
+</aside>
+<main>
+  <div class="top"><div><h1 id="topName">01 · 首页</h1><div class="meta" id="topMeta">单宠首页 · 视觉示意</div></div><div class="top-btns"><button type="button" class="pillbtn" id="allBtn">页面总览</button><button type="button" class="pillbtn" id="singleBtn" style="display:none">单页查看</button></div></div>
+  <div class="stage"><img id="screen" class="phone-image" alt="宠物生活 V1 页面高保真视觉原型" /></div>
+  <div class="control"><button type="button" class="round" id="prev" aria-label="上一页">‹</button><span class="counter" id="count">1 / 20</span><button type="button" class="round" id="next" aria-label="下一页">›</button></div>
+  <div class="overviews" id="overviewGrid"></div>
+</main>
+<aside class="right"><div class="sectionlabel">DESIGN NOTE</div><div class="ptitle" id="rightTitle">首页</div><div class="description" id="rightDesc"></div><div class="hr"></div><div class="smalltitle">功能依据</div><div id="functionChips"></div><div class="hr"></div><div class="smalltitle">视觉 / 交互要点</div><p class="hint" id="rightHint"></p><a class="action" id="download" download>保存当前页面 PNG</a><p class="footnote">图片为概念稿；显示内容均为演示数据。正式开发前须以 V1 需求选择、真实记录规则及可访问性规范为准。</p></aside>
+</div>
+<script>
+const pages = [
+["首页","核心页面","01_首页.png","M01–M04 / M08–M11","宠物作为第一视觉中心，今日待办、记录摘要和快捷操作收在首屏。","首页天气为装饰探索，实际开发不纳入默认 V1。已完成事件和待办分开统计。"],
+["时光 · 时间线","核心页面","02_时光.png","M05 / M06 / M07","默认全部宠物，可选单只或多只。按日期与类型过滤日记、喂食、体重等记录。","点击顶端宠物范围打开 17 号筛选面板；时间线与照片墙保持相同已选范围。"],
+["体重趋势","核心页面","03_体重趋势.png","M09","记录日期、体重及变化，以清爽折线图展现长期趋势。","首次没有数据时只显示空状态；不把增重或减重简单当成疾病风险。"],
+["宠物 · 单宠详情","核心页面","04_宠物档案.png","M01 / M02 / M03 / M10","从宠物 Tab 简要列表点击卡片后进入单只宠物档案，按模块管理。","这是二级详情页，不能作为宠物 Tab 的默认首页；从此页面可以进入体重、护理等更深层功能。"],
+["快捷添加","日常记录","05_快捷添加.png","M04 / M05 / M08–M10","通过底部 Sheet 选择要创建的真实记录类型。","预填当前宠物；重要数值不能从其它宠物自动继承。"],
+["写日记","日常记录","06_写日记.png","M05","文字、照片、关联宠物和事件日期构成低负担日记。","效果图的定位入口不在默认候选范围，真实实现应隐藏。"],
+["记录喂食","日常记录","07_记录喂食.png","M08","食物、份量、时间和备注一屏完成输入，并可参考历史。","数量和单位需要校验，保存结果进入实际记录时间线。"],
+["提醒与待办","日常记录","08_提醒与待办.png","M11","区分今天、即将到来和已完成，主打可靠提醒。","操作完成待办不等同于未经核实自动生成真实医疗记录。"],
+["宠物 · 列表","宠物管理","09_宠物列表.png","M01 / M02","宠物 Tab 根页面：搜索名称、按猫狗过滤；卡片仅显示小头像、名称、品种、年龄和轻量摘要。","点击卡片才进入 04 单只宠物详情；搜索和分类条件在返回时保留。不扩展为复杂小家分组。"],
+["Q版形象编辑","宠物管理","10_Q版形象编辑.png","M03","有限静态猫狗模板，调整毛色、花纹和三档体型。","同一宠物的耳朵、尾巴、四肢和毛色配置必须始终一致。"],
+["疫苗与驱虫","宠物管理","11_疫苗驱虫.png","M10 / M11","已发生护理记录与下一次提醒同屏管理。","避免把计划日期当成实际接种或驱虫的完成日期。"],
+["时光 · 照片墙","宠物管理","12_照片墙.png","M07","时光 Tab 内的照片墙视图，与时间线共用宠物筛选，按日期浏览已经关联的照片。","本页面按原编号暂放在此设计分组，但实际归属时光 Tab；切换模式时筛选条件不重置。"],
+["首次建档","首次使用与我的","13_首次建档.png","M01 / M02 / M03","简化首次创建流程，猫狗、名称为优先字段，其它资料可选。","Q 版与真实照片都可作为首页主视觉。"],
+["分享卡片","首次使用与我的","14_分享卡片.png","M12","宠物资料和 Q 版或照片生成单张分享图片。","使用系统分享，不默认加入联系方式或医疗敏感字段。"],
+["可读资料导出","首次使用与我的","15_可读资料导出.png","M13","选定资料导出为可阅读、可长期保存的文件。","M13 不等于完整恢复备份；未选 O16 时不要画恢复流程。"],
+["我的","首次使用与我的","16_我的.png","M11 / M13 / 基础体验","独立‘我的’主 Tab：常用功能、外观与使用、数据与隐私、帮助与关于四组可滚动入口。","二级页才展示具体选项；不默认出现账号、iCloud、完整备份或无法使用的语言切换。"],
+["时光 · 宠物筛选","核心页面","17_时光宠物筛选.png","M06 / M07","选择全部、单只或多只宠物，确认后时间线和照片墙共同应用筛选范围。","全部与具体多选互斥；取消不生效；查看多宠记录不代表新增事件自动关联多宠。图中非 V1 记录类型仅是示意占位。"],
+["外观与显示","首次使用与我的","18_外观与显示.png","基础体验","跟随系统、浅色、深色，以及系统文字缩放和减少动态效果的适配。","系统文字和减少动态效果默认遵循 iOS；不需要创建重复或互相冲突的独立开关。"],
+["通知与提醒设置","首次使用与我的","19_通知与提醒设置.png","M11","本地通知权限及护理计划的二级管理入口。","通知关闭不删除待办，计划提醒与实际医疗记录分开。"],
+["本地数据管理","首次使用与我的","20_本地数据管理.png","M13 / 基础隐私","本地记录、媒体概览、可读 CSV 导出与相册、通知权限说明。","未选择 O16 O17 O18，不显示完整备份、同步、外部导入；所有数据数量为占位。"]
+];
+const groups=["核心页面","日常记录","宠物管理","首次使用与我的"];
+const imagePath=name=>'单页图/'+name;
+let idx=0;
+const nav=document.getElementById('navlist');
+for(const g of groups){const h=document.createElement('div');h.className='group-label';h.textContent=g;nav.appendChild(h);const wrap=document.createElement('div');wrap.className='nav';pages.forEach((p,i)=>{if(p[1]!==g)return;const b=document.createElement('button');b.type='button';b.className='navbtn';b.id='nav'+i;b.innerHTML='<span class="num">'+String(i+1).padStart(2,'0')+'</span><span>'+p[0]+'</span>';b.onclick=()=>selectPage(i);wrap.appendChild(b)});nav.appendChild(wrap)}
+function selectPage(i){idx=(i+pages.length)%pages.length;const p=pages[idx];document.body.classList.remove('board-mode');document.getElementById('screen').src=imagePath(p[2]);document.getElementById('screen').alt=`${p[0]}页面视觉稿`;document.getElementById('topName').textContent=String(idx+1).padStart(2,'0')+' · '+p[0];document.getElementById('topMeta').textContent=p[1]+' · 视觉示意';document.getElementById('rightTitle').textContent=p[0];document.getElementById('rightDesc').textContent=p[4];document.getElementById('rightHint').textContent=p[5];document.getElementById('functionChips').innerHTML=p[3].split('/').map(t=>'<span class="chip">'+t.trim()+'</span>').join('');document.getElementById('count').textContent=(idx+1)+' / '+pages.length;document.getElementById('download').href=imagePath(p[2]);document.querySelectorAll('.navbtn').forEach((n,j)=>n.classList.toggle('active',j===idx));document.getElementById('singleBtn').style.display='none';document.getElementById('allBtn').style.display='inline-block';history.replaceState(null,'','#'+(idx+1))}
+function showOverviews(){document.body.classList.add('board-mode');document.getElementById('topName').textContent='六组视觉总览';document.getElementById('topMeta').textContent='原 16 页面 + 1 张筛选状态 + 3 张设置页 · 共 20 张';document.getElementById('allBtn').style.display='none';document.getElementById('singleBtn').style.display='inline-block'}
+const boardNames=['01_核心页面.png','02_日常记录.png','03_宠物管理.png','04_首次使用与我的.png','05_时光筛选与宠物列表.png','06_我的设置结构.png'];const grid=document.getElementById('overviewGrid');boardNames.forEach((b,i)=>{const img=document.createElement('img');img.className='overview';img.src='总览图/'+b;img.alt=(groups[i]||'时光筛选与宠物层级')+'视觉总览';img.title='点击查看该组第一屏';img.style.cursor='pointer';img.addEventListener('click',()=>selectPage(i===5?15:(i===4?16:i*4)));grid.appendChild(img)});
+document.getElementById('prev').onclick=()=>selectPage(idx-1);document.getElementById('next').onclick=()=>selectPage(idx+1);document.getElementById('allBtn').onclick=showOverviews;document.getElementById('singleBtn').onclick=()=>selectPage(idx);window.addEventListener('keydown',ev=>{if(ev.key==='ArrowLeft')selectPage(idx-1);if(ev.key==='ArrowRight')selectPage(idx+1)});let v=parseInt(location.hash.slice(1),10);selectPage(Number.isInteger(v)&&v>=1&&v<=pages.length?v-1:0);
+</script>
+</body>
+</html>

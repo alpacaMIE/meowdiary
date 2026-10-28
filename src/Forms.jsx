@@ -109,6 +109,7 @@ export function RecordForm({
     direction: "支出",
     repeat: group === "reminder" ? "每天" : undefined,
     frequency: 1,
+    frequencyUnit: record ? "hour" : "day",
     sound: "默认",
     volume: 60,
     itemName: "",
@@ -121,6 +122,7 @@ export function RecordForm({
   const [form, setForm] = useState(initial),
     [dirty, setDirty] = useState(false),
     [saving, setSaving] = useState(false);
+  const [startDate, reminderTime = ""] = form.date.split("T");
   const set = (key, value) => {
     setDirty(true);
     setForm((f) => ({ ...f, [key]: value }));
@@ -172,6 +174,9 @@ export function RecordForm({
     }
     setSaving(true);
     const data = { ...form, id: record?.id || uid(), group };
+    if (group === "reminder" && form.repeat === "自定义") {
+      data.frequency = Number(form.frequency);
+    }
     if (group === "weight") {
       data.weight =
         Number(form.weight) /
@@ -393,19 +398,30 @@ export function RecordForm({
           </div>
         )}
         <div className="form-card">
-          <Field label={group === "reminder" ? "开始时间" : "记录时间"}>
-            <input
-              aria-label={group === "reminder" ? "开始时间" : "记录时间"}
-              type="datetime-local"
-              required
-              value={form.date}
-              onChange={(e) => set("date", e.target.value)}
-            />
-          </Field>
-          {group === "reminder" && (
+          {group === "reminder" ? (
             <>
-              <Field label="重复">
+              <Field label="开始日期">
+                <input
+                  aria-label="开始日期"
+                  type="date"
+                  required
+                  value={startDate}
+                  onChange={(e) => set("date", `${e.target.value}T${reminderTime}`)}
+                />
+              </Field>
+              <Field label="提醒时间">
+                <input
+                  aria-label="提醒时间"
+                  type="time"
+                  required
+                  step="60"
+                  value={reminderTime}
+                  onChange={(e) => set("date", `${startDate}T${e.target.value}`)}
+                />
+              </Field>
+              <Field label="重复类型">
                 <select
+                  aria-label="重复类型"
                   value={form.repeat}
                   onChange={(e) => set("repeat", e.target.value)}
                 >
@@ -418,21 +434,39 @@ export function RecordForm({
               </Field>
               {form.repeat === "自定义" && (
                 <Field label="每隔">
-                  <div className="input-with-unit">
+                  <div className="input-with-unit reminder-interval">
                     <input
                       aria-label="重复间隔"
                       type="number"
                       min="1"
                       max="8760"
+                      step="1"
                       value={form.frequency}
                       onChange={(e) => set("frequency", e.target.value)}
                       required
                     />
-                    <span>小时</span>
+                    <select
+                      aria-label="间隔类型"
+                      value={form.frequencyUnit}
+                      onChange={(e) => set("frequencyUnit", e.target.value)}
+                    >
+                      <option value="day">天</option>
+                      <option value="hour">小时</option>
+                    </select>
                   </div>
                 </Field>
               )}
             </>
+          ) : (
+            <Field label="记录时间">
+              <input
+                aria-label="记录时间"
+                type="datetime-local"
+                required
+                value={form.date}
+                onChange={(e) => set("date", e.target.value)}
+              />
+            </Field>
           )}
           {group === "health" && (
             <>

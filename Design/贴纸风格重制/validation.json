@@ -1,0 +1,254 @@
+[
+  {
+    "File": "单页图\\01_首页.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1556582,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\02_时光.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1664975,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\03_体重趋势.png",
+    "Width": 852,
+    "Height": 1847,
+    "Bytes": 1330010,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\04_宠物档案.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1297308,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\05_快捷添加.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1294077,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\06_写日记.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1550093,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\07_记录喂食.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1241064,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\08_提醒与待办.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1317377,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\09_宠物列表.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1490555,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\10_Q版形象编辑.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1306905,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\11_疫苗驱虫.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1514965,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\12_照片墙.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1945180,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\13_首次建档.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1377605,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\14_分享卡片.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1663794,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\15_可读资料导出.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1442681,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\16_我的.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1487614,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\17_时光宠物筛选.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1438765,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\18_外观与显示.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1457910,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\19_通知与提醒设置.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1152423,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "单页图\\20_本地数据管理.png",
+    "Width": 853,
+    "Height": 1844,
+    "Bytes": 1510689,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "总览图\\01_核心页面.png",
+    "Width": 1536,
+    "Height": 1024,
+    "Bytes": 1608209,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "总览图\\02_日常记录.png",
+    "Width": 1536,
+    "Height": 1024,
+    "Bytes": 1672803,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "总览图\\03_宠物管理.png",
+    "Width": 1536,
+    "Height": 1024,
+    "Bytes": 1572932,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "总览图\\04_首次使用与我的.png",
+    "Width": 1536,
+    "Height": 1024,
+    "Bytes": 1539234,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "总览图\\05_时光筛选与宠物列表.png",
+    "Width": 1536,
+    "Height": 1024,
+    "Bytes": 1607247,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "总览图\\06_我的设置结构.png",
+    "Width": 1536,
+    "Height": 1024,
+    "Bytes": 1382979,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  },
+  {
+    "File": "辅助素材\\cat_settings_avatar.png",
+    "Width": 1254,
+    "Height": 1254,
+    "Bytes": 1903491,
+    "Changed": true,
+    "CornerAlpha": 0,
+    "CenterAlpha": 253
+  },
+  {
+    "File": "历史参考图\\04_首次使用与设置_旧版.png",
+    "Width": 1536,
+    "Height": 1024,
+    "Bytes": 1707349,
+    "Changed": true,
+    "CornerAlpha": 255,
+    "CenterAlpha": 255
+  }
+]

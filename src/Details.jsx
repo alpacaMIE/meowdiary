@@ -23,6 +23,7 @@ import {
   dateLabel,
   summary,
   groupLabels,
+  reminderRepeatLabel,
 } from "./data";
 import { RecordRow } from "./HomeTimeline";
 
@@ -421,7 +422,7 @@ export function Reminders({ a, petId }) {
                     </strong>
                     <small>
                       {dateLabel(r.date)} {r.date.slice(11, 16)}
-                      {r.repeat !== "从不" && ` · ${r.repeat}`}
+                      {r.repeat && r.repeat !== "从不" && ` · ${reminderRepeatLabel(r)}`}
                     </small>
                   </span>
                 </button>

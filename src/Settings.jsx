@@ -20,6 +20,7 @@ import {
   makeCSV,
   summary,
   petImage,
+  reminderRepeatLabel,
 } from "./data";
 
 export function Me({ a }) {
@@ -430,7 +431,7 @@ export function Export({ a }) {
         "",
         r.note || "",
         r.done ? "已完成" : "待办",
-        r.repeat,
+        reminderRepeatLabel(r),
       ]),
     );
     downloadFile(

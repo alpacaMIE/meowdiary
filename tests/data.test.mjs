@@ -8,6 +8,7 @@ import {
   TODAY,
   dayOffset,
   toggleReminder,
+  reminderRepeatLabel,
 } from "../src/data.js";
 
 test("pet, type, date and search filters intersect without mutating data", () => {
@@ -44,6 +45,27 @@ test("completing an overdue daily task schedules exactly one future occurrence",
   const restored = toggleReminder(result, result[0], now);
   assert.equal(restored[0].done, false);
   assert.equal(toggleReminder(restored, restored[0], now).length, 2);
+});
+
+test("custom reminders use the selected interval and preserve it for the next occurrence", () => {
+  const cases = [
+    { frequency: 2, frequencyUnit: "day", date: "2026-10-30T20:00", now: "2026-10-30T21:00", next: "2026-11-01T20:00", label: "每隔 2 天" },
+    { frequency: 3, frequencyUnit: "hour", date: "2026-10-30T23:30", now: "2026-10-30T23:40", next: "2026-10-31T02:30", label: "每隔 3 小时" },
+    { frequency: 2, frequencyUnit: "day", date: "2026-10-20T09:00", now: "2026-10-28T10:00", next: "2026-10-30T09:00", label: "每隔 2 天" },
+    { frequency: 4, frequencyUnit: "hour", date: "2026-10-27T09:00", now: "2026-10-28T10:00", next: "2026-10-28T13:00", label: "每隔 4 小时" },
+    { frequency: 6, date: "2026-10-28T09:00", now: "2026-10-28T10:00", next: "2026-10-28T15:00", label: "每隔 6 小时" },
+  ];
+  for (const { now, next, label, ...interval } of cases) {
+    const reminder = { id: "custom", petId: "tuanzi", type: "训练", repeat: "自定义", done: false, ...interval };
+    const result = toggleReminder([reminder], reminder, new Date(now));
+    assert.equal(result.length, 2);
+    assert.equal(result[1].date, next);
+    assert.equal(result[1].frequency, reminder.frequency);
+    assert.equal(result[1].frequencyUnit, reminder.frequencyUnit);
+    assert.equal(reminderRepeatLabel(result[1]), label);
+  }
+  assert.equal(reminderRepeatLabel({ repeat: "每天" }), "每天");
+  assert.equal(reminderRepeatLabel({ repeat: "从不" }), "从不");
 });
 
 test("a one-time task toggles without creating a record or another reminder", () => {

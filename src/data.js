@@ -70,6 +70,11 @@ export function iconFor(name = "", group = "") {
     }[group] || "PawPrint"
   );
 }
+export function reminderRepeatLabel(reminder) {
+  if (reminder.repeat !== "自定义") return reminder.repeat || "从不";
+  const frequency = Math.max(1, Number(reminder.frequency) || 1);
+  return `每隔 ${frequency} ${reminder.frequencyUnit === "day" ? "天" : "小时"}`;
+}
 export function toggleReminder(reminders, reminder, now = new Date()) {
   const items = reminders.map((r) => r.id === reminder.id ? { ...r, done: !r.done } : r);
   if (!reminder.done && reminder.repeat && reminder.repeat !== "从不") {
@@ -80,6 +85,7 @@ export function toggleReminder(reminders, reminder, now = new Date()) {
       else if (reminder.repeat === "每周") d.setDate(d.getDate() + 7);
       else if (reminder.repeat === "每月") d.setMonth(d.getMonth() + 1);
       else if (reminder.repeat === "每年") d.setFullYear(d.getFullYear() + 1);
+      else if (reminder.frequencyUnit === "day") d.setDate(d.getDate() + Math.max(1, Number(reminder.frequency) || 1));
       else d.setHours(d.getHours() + Math.max(1, Number(reminder.frequency) || 1));
       n++;
     } while (d <= now && n < 10000);

@@ -314,4 +314,5 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
   .profile-stats > button { gap: 5px; }
   .bottom-nav { left: 12px; right: 12px; }
 }
+.reminder-interval select { min-width: 72px; width: 72px !important; color: var(--ink); font-size: 14px !important; }
 @media (prefers-reduced-motion: reduce) { .pet-patted { animation: none; } }

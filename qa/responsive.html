@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>喵日记 · 响应式验收</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 20px; background: #f4f4f0; color: #30302e; font: 14px/1.5 system-ui, sans-serif; }
+      header { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 12px; }
+      h1 { font-size: 17px; margin: 0 12px 0 0; }
+      button { border: 1px solid #ddd; border-radius: 10px; background: white; padding: 10px 12px; cursor: pointer; }
+      button[aria-pressed="true"] { background: #fff5d4; border-color: #d3af3e; }
+      output { display: block; margin-bottom: 16px; color: #65655e; }
+      .stage { margin: auto; }
+      iframe { border: 0; display: block; transform-origin: top left; background: white; box-shadow: 0 2px 14px #30302e15; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>响应式验收</h1>
+      <button data-size="320,740" aria-pressed="false">320px</button>
+      <button data-size="375,812" aria-pressed="true">375px</button>
+      <button data-size="768,1024" aria-pressed="false">768px</button>
+      <button data-size="1280,800" aria-pressed="false">1280px</button>
+      <button data-size="844,390" aria-pressed="false">横屏</button>
+    </header>
+    <output aria-live="polite">正在加载…</output>
+    <div class="stage"><iframe title="应用预览" src="/"></iframe></div>
+    <script type="module">
+      const frame = document.querySelector("iframe");
+      const stage = document.querySelector(".stage");
+      const output = document.querySelector("output");
+      let width = 375, height = 812;
+      function measure() {
+        const doc = frame.contentDocument;
+        const shell = doc?.querySelector(".app-shell");
+        const scroll = doc?.querySelector(".app-scroll");
+        if (!shell || !scroll) return;
+        const full = shell.clientWidth === width && shell.clientHeight === height;
+        const overflow = Math.max(doc.documentElement.scrollWidth, scroll.scrollWidth) > width;
+        output.textContent = `${width} × ${height} · ${full ? "铺满视口" : "视口尺寸异常"} · ${overflow ? "存在横向溢出" : "无横向溢出"}`;
+      }
+      function resize() {
+        const scale = Math.min(1, (document.body.clientWidth - 40) / width, Math.max(180, window.innerHeight - stage.offsetTop - 20) / height);
+        frame.style.width = `${width}px`;
+        frame.style.height = `${height}px`;
+        frame.style.transform = `scale(${scale})`;
+        stage.style.width = `${width * scale}px`;
+        stage.style.height = `${height * scale}px`;
+        requestAnimationFrame(measure);
+      }
+      document.querySelectorAll("button").forEach((button) => {
+        button.addEventListener("click", () => {
+          [width, height] = button.dataset.size.split(",").map(Number);
+          document.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
+          resize();
+        });
+      });
+      frame.addEventListener("load", () => {
+        new MutationObserver(measure).observe(frame.contentDocument.body, { subtree: true, childList: true, attributes: true });
+        new ResizeObserver(measure).observe(frame.contentDocument.documentElement);
+        resize();
+      });
+      window.addEventListener("resize", resize);
+      resize();
+    </script>
+  </body>
+</html>

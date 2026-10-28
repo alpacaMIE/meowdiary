@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-打开 http://127.0.0.1:5173 。桌面以居中的移动端界面展示，手机宽度下自动铺满。
+打开 http://127.0.0.1:5173 。页面铺满浏览器可用空间，手机使用单列布局，平板和桌面按可用宽度展示多列内容。
 
 ```powershell
 npm run build
@@ -51,3 +51,4 @@ npm run check:types
 `npm run check:types` 将生成的 `src/types.json` 与原始类型清单逐项比较。更新原始清单后，可运行 `node scripts/import-types.mjs` 重新生成。
 
 浏览器验收页 `http://127.0.0.1:5173/qa/mobile.html` 同时展示 375px 与 320px 的窄屏布局。
+响应式验收页 `http://127.0.0.1:5173/qa/responsive.html` 可切换 320px、375px、768px、1280px 和横屏视口，并检查页面是否铺满及有无横向溢出。

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Avatar,
+  StickerIcon,
   PetArt,
   Icon,
   IconButton,
@@ -45,170 +46,87 @@ export function RecordRow({ record, a }) {
   );
 }
 export function Home({ a }) {
-  const pet = a.currentPet,
-    records = a.data.records
-      .filter((r) => r.petId === pet.id)
-      .sort((x, y) => y.date.localeCompare(x.date));
-  const todayRecords = records.filter((r) => r.date.startsWith(TODAY)),
-    pending = a.data.reminders.filter((r) => r.petId === pet.id && !r.done),
-    next = pending.sort((x, y) => x.date.localeCompare(y.date))[0];
-  const hour = new Date().getHours(),
-    greeting =
-      hour < 11
-        ? "早上好"
-        : hour < 14
-          ? "中午好"
-          : hour < 18
-            ? "下午好"
-            : "晚上好";
+  const pet = a.currentPet;
+  const [pat, setPat] = useState({ petId: "", count: 0 });
+  const patted = pat.petId === pet.id && pat.count > 0;
+  const records = a.data.records.filter((r) => r.petId === pet.id)
+    .sort((x, y) => y.date.localeCompare(x.date));
+  const reminders = a.data.reminders.filter((r) => r.petId === pet.id);
+  const due = reminders.filter((r) => r.date.slice(0, 10) <= TODAY && (!r.done || r.date.startsWith(TODAY)));
+  const upcoming = reminders.filter((r) => !r.done && r.date.slice(0, 10) > TODAY)
+    .sort((x, y) => x.date.localeCompare(y.date));
+  const shown = (due.length ? due : upcoming.slice(0, 3)).slice().sort((x, y) => x.date.localeCompare(y.date));
+  const groups = shown.reduce((out, r) => {
+    const date = r.date.slice(0, 10), hour = Number(r.date.slice(11, 13));
+    const name = date < TODAY ? "待补办" : date > TODAY ? dateLabel(r.date) : hour < 12 ? "上午" : hour < 18 ? "下午" : "晚上";
+    (out[name] ??= []).push(r);
+    return out;
+  }, {});
+  const hour = new Date().getHours();
+  const greeting = hour < 11 ? "早上好" : hour < 14 ? "中午好" : hour < 18 ? "下午好" : "晚上好";
+  function touchPet() {
+    setPat((previous) => ({ petId: pet.id, count: previous.petId === pet.id ? previous.count + 1 : 1 }));
+  }
   return (
     <div className="home-page">
       <header className="home-header">
         <div>
-          <h1>
-            {greeting}，{pet.name}
-            <span className="greeting-dot">。</span>
-          </h1>
-          <p>
-            {new Date().toLocaleDateString("zh-CN", {
-              month: "long",
-              day: "numeric",
-              weekday: "long",
-            })}
-          </p>
+          <h1>{greeting}，{pet.name}<span className="greeting-strokes" aria-hidden="true" /></h1>
+          <p>{new Date().toLocaleDateString("zh-CN", { month: "long", day: "numeric" })} · {new Date().toLocaleDateString("zh-CN", { weekday: "short" })}</p>
         </div>
-        <button
-          className="pet-switcher"
-          aria-label="切换宠物"
-          onClick={() => a.setSheet({ kind: "pets" })}
-        >
-          <Avatar pet={pet} size={38} />
-          <Icon name="ChevronDown" size={15} />
+        <button className="pet-switcher" aria-label="切换宠物" onClick={() => a.setSheet({ kind: "pets" })}>
+          <Avatar pet={pet} size={31} /><span>{pet.name}</span><Icon name="ChevronDown" size={15} />
         </button>
       </header>
-      <section className="pet-stage">
-        <div className="stage-halo" />
-        <div className="stage-window" />
-        <div className="stage-sun" />
-        <div className="stage-leaf leaf-one" />
-        <div className="stage-leaf leaf-two" />
-        <span className="stage-spark spark-one">
-          <Icon name="Sparkles" size={24} />
-        </span>
-        <span className="stage-spark spark-two">
-          <Icon name="Heart" size={20} />
-        </span>
-        <button
-          className="hero-pet-button"
-          aria-label={`查看${pet.name}的档案`}
-          onClick={() => a.go({ name: "pet", id: pet.id })}
-        >
-          <PetArt pet={pet} />
+      <section className="pet-stage" aria-label={`${pet.name}的贴纸小天地`}>
+        <div className="sticker-cushion" aria-hidden="true" />
+        <span className="doodle-heart heart-left" aria-hidden="true"><Icon name="Heart" size={23} /></span>
+        <span className="doodle-heart heart-right" aria-hidden="true"><Icon name="Heart" size={20} /></span>
+        <span className="doodle-ball" aria-hidden="true" />
+        <button className="hero-pet-button" aria-label={`摸摸${pet.name}`} onClick={touchPet}>
+          <PetArt key={`${pet.id}-${pat.count}`} pet={pet} className={patted ? "pet-patted" : ""} />
         </button>
-        <div className="stage-floor" />
-        <div className="together-badge">
-          <span className="tiny-heart">
-            <Icon name="Heart" size={13} fill="currentColor" />
-          </span>
-          一起的第 <strong>{togetherDays(pet.homeDate)}</strong> 天
-        </div>
-        <button
-          className="stage-edit"
-          aria-label="编辑宠物形象"
-          onClick={() => a.go({ name: "appearance-pet", id: pet.id })}
-        >
-          <Icon name="Sparkles" size={19} />
+        <button className="pet-speech taped-note" onClick={touchPet} aria-live="polite">
+          {patted ? ["呼噜呼噜～", "贴贴！", "再摸一下"][((pat.count || 1) - 1) % 3] : "摸摸我"}
+        </button>
+        <button className="together-sticker" aria-label={`查看${pet.name}的档案，已陪伴${togetherDays(pet.homeDate)}天`} onClick={() => a.go({ name: "pet", id: pet.id })}>
+          <Icon name="PawPrint" size={19} /><strong>{togetherDays(pet.homeDate)}<small>天</small></strong>
         </button>
       </section>
       <div className="page-content home-content">
-        <div className="today-cards">
-          <button
-            className="today-card"
-            onClick={() => {
-              a.setFilters({
-                pets: [pet.id],
-                group: "all",
-                from: TODAY,
-                to: TODAY,
-                sort: "desc",
-              });
-              a.switchTab("timeline");
-            }}
-          >
-            <span className="today-label">
-              <Icon name="CalendarDays" size={17} />
-              今天的陪伴
-            </span>
-            <span className="today-value">
-              {todayRecords.length}
-              <small>条记录</small>
-            </span>
-          </button>
-          <button
-            className="today-card"
-            onClick={() => a.go({ name: "reminders" })}
-          >
-            <span className="today-label">
-              <Icon name="Bell" size={17} />
-              待办事项
-              <span className="notification-dot" />
-            </span>
-            <span className="today-value">
-              {pending.length}
-              <small>件小事</small>
-            </span>
-            <span className="today-foot">
-              {next
-                ? `${next.type} · ${dateLabel(next.date)}`
-                : "今天也照顾得很好"}
-              <Icon name="ChevronRight" size={14} />
-            </span>
-          </button>
-        </div>
-        <SectionTitle>快捷记录</SectionTitle>
-        <div className="quick-actions">
-          {[
-            ["diary", "BookOpen", "写日记"],
-            ["food", "Soup", "记喂食"],
-            ["weight", "Scale", "记体重"],
-          ].map(([group, icon, label]) => (
-            <button
-              key={group}
-              className={`quick-action ${group}`}
-              onClick={() => a.openForm(group)}
-            >
-              <Icon name={icon} size={26} />
-              <span>{label}</span>
-              <Icon className="quick-plus" name="Plus" size={13} />
+        <div className="quick-actions" aria-label="快捷记录">
+          {[["diary", "BookOpen", "写日记"], ["food", "Soup", "喂食"], ["weight", "Scale", "记体重"]].map(([group, icon, label]) => (
+            <button key={group} className={`quick-action ${group}`} onClick={() => a.openForm(group)}>
+              <StickerIcon name={icon} size={43} /><span>{label}</span>
             </button>
           ))}
         </div>
-        <SectionTitle
-          action="全部"
-          onClick={() => {
-            a.setFilters({
-              pets: [pet.id],
-              group: "all",
-              from: "",
-              to: "",
-              sort: "desc",
-            });
-            a.switchTab("timeline");
-          }}
-        >
-          最近记录
-        </SectionTitle>
-        <div className="card recent-card">
-          {records.slice(0, 3).map((r) => (
-            <RecordRow key={r.id} record={r} a={a} />
-          ))}
-          {!records.length && (
-            <Empty
-              title="我们的故事，从今天开始"
-              action="写下第一篇日记"
-              onAction={() => a.openForm("diary")}
-            />
-          )}
+        <div className="section-title home-tasks-heading">
+          <h2>{due.length || !upcoming.length ? "今日待办" : "接下来的小事"}</h2>
+          <button className="task-progress" aria-label="查看全部待办" onClick={() => a.go({ name: "reminders", id: pet.id })}>
+            <StickerIcon name="PawPrint" size={27} /><strong>{shown.filter((r) => r.done).length}<span> / {shown.length}</span></strong><Icon name="ChevronRight" size={14} />
+          </button>
+        </div>
+        {Object.entries(groups).map(([label, items]) => (
+          <section className="task-group" key={label}>
+            <h3 className="task-group-label">{label} · {items.length}</h3>
+            <div className="home-task-grid">
+              {items.map((r) => (
+                <button key={r.id} className={`home-task ${r.done ? "done" : ""}`} aria-label={r.done ? `恢复${r.type}待办` : `完成${r.type}`} aria-pressed={r.done} onClick={() => a.completeReminder(r)}>
+                  <span className="task-time taped-note">{r.done ? "完成啦" : r.date.slice(11, 16)}</span>
+                  <span className="task-sticker-well"><TypeIcon name={r.type} group="reminder" size={40} />{r.done && <span className="task-done-check"><Icon name="Check" size={15} /></span>}</span>
+                  <strong>{r.type}</strong>
+                </button>
+              ))}
+              <button className="home-task task-add" aria-label="新增提醒" onClick={() => a.setSheet({ kind: "types", group: "reminder" })}><span className="task-sticker-well"><Icon name="Plus" size={34} /></span></button>
+            </div>
+          </section>
+        ))}
+        {!shown.length && <div className="home-no-tasks"><StickerIcon name="Bell" size={42} /><span>今天的小事都安排好啦</span><IconButton icon="Plus" label="新增提醒" onClick={() => a.setSheet({ kind: "types", group: "reminder" })} /></div>}
+        <SectionTitle action="全部" onClick={() => { a.setFilters({ pets: [pet.id], group: "all", from: "", to: "", sort: "desc" }); a.switchTab("timeline"); }}>最近记录</SectionTitle>
+        <div className="recent-card home-recent">
+          {records.slice(0, 3).map((r) => <RecordRow key={r.id} record={r} a={a} />)}
+          {!records.length && <Empty title="我们的故事，从今天开始" action="写下第一篇日记" onAction={() => a.openForm("diary")} />}
         </div>
       </div>
     </div>

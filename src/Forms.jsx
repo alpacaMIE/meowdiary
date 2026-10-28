@@ -497,7 +497,7 @@ export function PetForm({ pet, onBack, onSave, onDelete, toast, ask }) {
       birthday: "",
       homeDate: TODAY,
       sterilized: "未绝育",
-      image: "/assets/cat.png",
+      image: "/assets/cat-photo.png",
       tone: "original",
       body: "standard",
     },
@@ -535,7 +535,7 @@ export function PetForm({ pet, onBack, onSave, onDelete, toast, ask }) {
       >
         <div className="species-picker">
           {[
-            ["猫", "猫咪", "/assets/cat.png"],
+            ["猫", "猫咪", "/assets/cat-photo.png"],
             ["狗", "狗狗", "/assets/dog.png"],
           ].map(([id, label, img]) => (
             <button
@@ -637,7 +637,7 @@ export function PetForm({ pet, onBack, onSave, onDelete, toast, ask }) {
             type="button"
             onClick={() => set("photo", "")}
           >
-            恢复毛绒形象
+            恢复默认贴纸
           </button>
         )}
         <Primary type="submit">

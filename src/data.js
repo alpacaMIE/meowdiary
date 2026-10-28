@@ -5,6 +5,8 @@ export const dayOffset = (offset) => {
   return d.toLocaleDateString("sv-SE");
 };
 export const uid = () => crypto.randomUUID();
+// Resolve the old demo path too, so existing local diaries keep their data.
+export const petImage = (pet) => pet?.photo || (!pet?.image || pet.image === "/assets/cat.png" ? "/assets/cat-photo.png" : pet.image);
 export const dateLabel = (date) => {
   const key = date?.slice(0, 10);
   if (key === TODAY) return "今天";
@@ -41,6 +43,7 @@ export const groupLabels = {
   stock: "囤货",
 };
 export function iconFor(name = "", group = "") {
+  if (/牙/.test(name)) return "Toothbrush";
   if (group === "diary") return "BookOpen";
   if (/体重/.test(name) || group === "weight") return "Scale";
   if (/疫苗|联$|医疗|药|体检|生病|驱/.test(name) || group === "health")
@@ -66,6 +69,25 @@ export function iconFor(name = "", group = "") {
       note: "NotebookPen",
     }[group] || "PawPrint"
   );
+}
+export function toggleReminder(reminders, reminder, now = new Date()) {
+  const items = reminders.map((r) => r.id === reminder.id ? { ...r, done: !r.done } : r);
+  if (!reminder.done && reminder.repeat && reminder.repeat !== "从不") {
+    const d = new Date(reminder.date);
+    let n = 0;
+    do {
+      if (reminder.repeat === "每天") d.setDate(d.getDate() + 1);
+      else if (reminder.repeat === "每周") d.setDate(d.getDate() + 7);
+      else if (reminder.repeat === "每月") d.setMonth(d.getMonth() + 1);
+      else if (reminder.repeat === "每年") d.setFullYear(d.getFullYear() + 1);
+      else d.setHours(d.getHours() + Math.max(1, Number(reminder.frequency) || 1));
+      n++;
+    } while (d <= now && n < 10000);
+    const nextDate = d.toLocaleDateString("sv-SE") + "T" + d.toTimeString().slice(0, 5);
+    if (!items.some((r) => !r.done && r.petId === reminder.petId && r.type === reminder.type && r.date === nextDate))
+      items.push({ ...reminder, id: uid(), date: nextDate, done: false });
+  }
+  return items;
 }
 export function seedData() {
   return {

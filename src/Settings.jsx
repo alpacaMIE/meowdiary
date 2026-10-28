@@ -19,6 +19,7 @@ import {
   downloadFile,
   makeCSV,
   summary,
+  petImage,
 } from "./data";
 
 export function Me({ a }) {
@@ -523,9 +524,9 @@ export function Share({ a, pet, record }) {
   const [theme, setTheme] = useState("cream"),
     [busy, setBusy] = useState(false);
   const palettes = {
-    cream: ["#fff7ed", "#f5dfc6"],
-    sage: ["#f3f5e9", "#dce5cc"],
-    rose: ["#fff3f1", "#f0d9d7"],
+    cream: ["#ffffff", "#ffe59d"],
+    sage: ["#ffffff", "#b5cd9f"],
+    rose: ["#ffffff", "#f2b5a9"],
   };
   async function save() {
     setBusy(true);
@@ -534,22 +535,28 @@ export function Share({ a, pet, record }) {
       canvas.width = 900;
       canvas.height = 1200;
       const c = canvas.getContext("2d");
-      const grad = c.createLinearGradient(0, 0, 900, 1200);
-      grad.addColorStop(0, palettes[theme][0]);
-      grad.addColorStop(1, palettes[theme][1]);
-      c.fillStyle = grad;
+      c.fillStyle = palettes[theme][0];
       c.fillRect(0, 0, 900, 1200);
-      c.fillStyle = "#392d29";
+      c.strokeStyle = "#e6e6df";
+      c.lineWidth = 3;
+      c.strokeRect(20, 20, 860, 1160);
+      c.save();
+      c.translate(450, 30);
+      c.rotate(-.06);
+      c.fillStyle = palettes[theme][1];
+      c.fillRect(-95, -20, 190, 40);
+      c.restore();
+      c.fillStyle = "#30302e";
       c.font = 'bold 74px "Microsoft YaHei", sans-serif';
       c.fillText(pet.name, 70, 145);
-      c.fillStyle = "#75645c";
+      c.fillStyle = "#858580";
       c.font = '27px "Microsoft YaHei", sans-serif';
       c.fillText(`${pet.breed} · ${ageLabel(pet.birthday)}`, 74, 200);
       const img = await new Promise((resolve, reject) => {
         const i = new Image();
         i.onload = () => resolve(i);
         i.onerror = reject;
-        i.src = pet.photo || pet.image;
+        i.src = petImage(pet);
       });
       const ratio = Math.min(700 / img.width, 650 / img.height);
       const bodyScale =
@@ -560,15 +567,27 @@ export function Share({ a, pet, record }) {
           : pet.tone === "silver"
             ? "grayscale(0.85)"
             : "none";
-      c.drawImage(
-        img,
-        (900 - img.width * ratio * bodyScale) / 2,
-        250,
-        img.width * ratio * bodyScale,
-        img.height * ratio,
-      );
+      const sticker = document.createElement("canvas");
+      sticker.width = 800;
+      sticker.height = 700;
+      const sc = sticker.getContext("2d");
+      const w = img.width * ratio * bodyScale, h = img.height * ratio;
+      const left = (800 - w) / 2;
+      sc.drawImage(img, left, 20, w, h);
+      sc.globalCompositeOperation = "source-in";
+      sc.fillStyle = "white";
+      sc.fillRect(0, 0, 800, 700);
+      c.save();
       c.filter = "none";
-      c.fillStyle = "#392d29";
+      c.shadowColor = "#30302e20";
+      c.shadowBlur = 8;
+      c.shadowOffsetY = 4;
+      for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 8)
+        c.drawImage(sticker, 50 + Math.cos(angle) * 9, 230 + Math.sin(angle) * 9);
+      c.restore();
+      c.drawImage(img, (900 - w) / 2, 250, w, h);
+      c.filter = "none";
+      c.fillStyle = "#30302e";
       c.textAlign = "center";
       c.font = '36px "Microsoft YaHei", sans-serif';
       c.fillText(
@@ -578,7 +597,7 @@ export function Share({ a, pet, record }) {
         450,
         990,
       );
-      c.fillStyle = "#8d796a";
+      c.fillStyle = "#858580";
       c.font = '23px "Microsoft YaHei", sans-serif';
       c.fillText("把陪伴，写进每一天。", 450, 1050);
       c.font = '20px "Microsoft YaHei", sans-serif';
@@ -625,7 +644,7 @@ export function Share({ a, pet, record }) {
         </div>
         <div className="share-themes">
           {[
-            ["cream", "奶油"],
+            ["cream", "奶黄"],
             ["sage", "鼠尾草"],
             ["rose", "浅桃"],
           ].map(([id, label]) => (

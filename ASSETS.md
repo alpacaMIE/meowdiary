@@ -21,3 +21,12 @@ Use case: stylized-concept. Asset type: secondary pet mascot for a warm cream pe
 Use case: illustration-story. Asset type: wide editorial diary photo for a warm cream pet journal app. One adorable fluffy seal-bicolor ragdoll kitten with large blue eyes, white muzzle, tiny pink nose, cocoa brown ears and mask, sitting on cream linen by a sunlit window, gently looking toward a tiny blue butterfly. Plush lifelike soft fine fur and delicate painterly finish. Warm afternoon sunlight, blurred beige domestic interior with a soft green houseplant, quiet tender mood, lovely subtle grain and creamy caramel palette. Wide horizontal 3:2 composition, kitten on right-center, unobstructed. No text or logos or watermark.
 
 图标：Lucide React（ISC）。站点小图标为本地 SVG。毛色和体型选择使用前端 CSS 展示参数，不覆盖原始素材。
+
+## 2026-10-28 · 手绘贴纸风
+
+本轮使用内置 `image_gen`，新增以下透明素材：
+
+- `public/assets/cat-photo.png`：从用户确认的 `Design/风格探索/home-photo-sticker-v2.png` 提取的照片质感猫咪。白边与投影由前端 SVG filter 添加。完整提示词见 `Design/风格探索/cat-photo.prompt.md`。
+- `public/assets/sticker-icons.png`：3 列 × 4 行的手绘图标图集，通过 CSS 单元格定位显示。完整提示词见 `Design/风格探索/sticker-icons.prompt.md`。
+
+两张素材均为 AI 生成，保存在项目内，无远程资源依赖。旧版猫咪图保留用于历史资料兼容，新界面将原猫咪素材路径映射到 `cat-photo.png`。

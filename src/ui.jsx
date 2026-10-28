@@ -135,11 +135,35 @@ const Icons = {
   Image,
   Download,
 };
-import { iconFor, ageLabel } from "./data";
+import { iconFor, ageLabel, petImage } from "./data";
 
 export function Icon({ name = "PawPrint", size = 22, ...props }) {
   const C = Icons[name] || Icons.PawPrint;
-  return <C size={size} strokeWidth={1.65} {...props} />;
+  return <C size={size} strokeWidth={2} {...props} />;
+}
+// The transparent atlas uses a regular 3 × 4 grid; all icons share one request.
+const stickerCells = {
+  BookOpen: 0, NotebookPen: 0, Soup: 1, Scale: 2, Toothbrush: 3,
+  Scissors: 4, Camera: 5, Images: 5, Image: 5, Syringe: 6,
+  Bell: 7, BellRing: 7, CalendarClock: 7, ListTodo: 7, Wallet: 8,
+  HeartPulse: 9, ShieldCheck: 9, Package: 10, PawPrint: 11,
+};
+export function StickerIcon({ name = "PawPrint", size = 42, className = "" }) {
+  const cell = stickerCells[name];
+  if (cell === undefined) return <span className={`drawn-icon ${className}`} style={{ width: size, height: size }} aria-hidden="true"><Icon name={name} size={Math.round(size * .65)} /></span>;
+  return <span className={`sticker-icon ${className}`} aria-hidden="true" style={{ width: size, height: size, backgroundPosition: `${(cell % 3) * 50}% ${Math.floor(cell / 3) * 100 / 3}%` }} />;
+}
+
+export function StickerFilters() {
+  return <svg className="sticker-filters" aria-hidden="true" width="0" height="0"><defs>
+    <filter id="photo-sticker" x="-25%" y="-25%" width="150%" height="150%" colorInterpolationFilters="sRGB">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="3.2" result="edge" />
+      <feFlood floodColor="white" />
+      <feComposite in2="edge" operator="in" result="border" />
+      <feMerge><feMergeNode in="border" /><feMergeNode in="SourceGraphic" /></feMerge>
+      <feDropShadow dx="0" dy="2" stdDeviation="2.2" floodColor="#252525" floodOpacity=".16" />
+    </filter>
+  </defs></svg>;
 }
 export function IconButton({ icon, label, onClick, ...props }) {
   return (
@@ -163,7 +187,7 @@ export function Avatar({ pet, size = 44, className = "", ...props }) {
       {...props}
     >
       <img
-        src={pet?.photo || pet?.image || "/assets/cat.png"}
+        src={petImage(pet)}
         alt={pet?.name || "宠物"}
         className={
           pet?.photo ? "real-photo" : `tone-${pet?.tone || "original"}`
@@ -176,7 +200,7 @@ export function PetArt({ pet, className = "" }) {
   return (
     <img
       className={`pet-art ${className} tone-${pet?.tone || "original"} body-${pet?.body || "standard"} ${pet?.photo ? "uploaded-pet" : ""}`}
-      src={pet?.photo || pet?.image || "/assets/cat.png"}
+      src={petImage(pet)}
       alt={pet?.name || "宠物"}
     />
   );
@@ -214,7 +238,7 @@ export function Row({ icon, label, value, onClick, tone = "peach", children }) {
   return (
     <button type="button" className="setting-row" onClick={onClick}>
       <span className={`small-icon ${tone}`}>
-        <Icon name={icon} size={19} />
+        <StickerIcon name={icon} size={34} />
       </span>
       <span className="row-label">{label}</span>
       {value && <span className="row-value">{value}</span>}
@@ -231,7 +255,7 @@ export function Empty({
   return (
     <div className="empty">
       <span className="empty-icon">
-        <Icon name={icon} size={32} />
+        <StickerIcon name={icon} size={58} />
       </span>
       <h3>{title}</h3>
       {action && (
@@ -246,7 +270,7 @@ export function Empty({
 export function TypeIcon({ name, group, icon, size = 24 }) {
   return (
     <span className={`type-icon ${group || "note"}`}>
-      <Icon name={icon || iconFor(name, group)} size={size} />
+      <StickerIcon name={icon || iconFor(name, group)} size={size * 1.9} />
     </span>
   );
 }

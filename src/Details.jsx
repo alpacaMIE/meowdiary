@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Icon,
+  StickerIcon,
   IconButton,
   Avatar,
   PetArt,
@@ -22,7 +23,6 @@ import {
   dateLabel,
   summary,
   groupLabels,
-  uid,
 } from "./data";
 import { RecordRow } from "./HomeTimeline";
 
@@ -114,7 +114,7 @@ export function PetDetail({ a, pet }) {
               <span
                 className={`small-icon ${target === "weight" ? "blue" : target === "health" ? "sage" : "peach"}`}
               >
-                <Icon name={icon} size={20} />
+                <StickerIcon name={icon} size={37} />
               </span>
               <span>
                 {label}
@@ -240,8 +240,8 @@ export function Weight({ a, pet }) {
             >
               <defs>
                 <linearGradient id="chart-fill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#D58C67" stopOpacity="0.22" />
-                  <stop offset="100%" stopColor="#D58C67" stopOpacity="0" />
+                  <stop offset="0%" stopColor="#EDC24A" stopOpacity="0.22" />
+                  <stop offset="100%" stopColor="#EDC24A" stopOpacity="0" />
                 </linearGradient>
               </defs>
               {[0, 0.5, 1].map((t) => (
@@ -269,7 +269,7 @@ export function Weight({ a, pet }) {
               <path
                 d={path}
                 fill="none"
-                stroke="#C47D57"
+                stroke="#B09234"
                 strokeWidth="2.5"
                 strokeLinejoin="round"
               />
@@ -357,43 +357,7 @@ export function Reminders({ a, petId }) {
           : !r.done,
     )
     .sort((x, y) => x.date.localeCompare(y.date));
-  const complete = (r) => {
-    let items = a.data.reminders.map((x) =>
-      x.id === r.id ? { ...x, done: !x.done } : x,
-    );
-    if (!r.done && r.repeat && r.repeat !== "从不") {
-      const d = new Date(r.date);
-      const base = new Date();
-      let n = 0;
-      do {
-        if (r.repeat === "每天") d.setDate(d.getDate() + 1);
-        else if (r.repeat === "每周") d.setDate(d.getDate() + 7);
-        else if (r.repeat === "每月") d.setMonth(d.getMonth() + 1);
-        else if (r.repeat === "每年") d.setFullYear(d.getFullYear() + 1);
-        else d.setHours(d.getHours() + Math.max(1, Number(r.frequency) || 1));
-        n++;
-      } while (d <= base && n < 10000);
-      const nextDate =
-        d.toLocaleDateString("sv-SE") + "T" + d.toTimeString().slice(0, 5);
-      if (
-        !items.some(
-          (x) =>
-            !x.done &&
-            x.petId === r.petId &&
-            x.type === r.type &&
-            x.date === nextDate,
-        )
-      )
-        items.push({ ...r, id: uid(), date: nextDate, done: false });
-    }
-    if (a.commit({ ...a.data, reminders: items }))
-      a.toast(
-        r.done
-          ? "已恢复待办"
-          : "已完成" +
-              (r.repeat && r.repeat !== "从不" ? "，下次提醒已安排" : ""),
-      );
-  };
+  const complete = a.completeReminder;
   return (
     <>
       <Topbar
@@ -682,13 +646,13 @@ export function PetAppearance({ a, pet }) {
     [body, setBody] = useState(pet.body);
   return (
     <>
-      <Topbar title="它的毛绒模样" onBack={a.back} />
+      <Topbar title="贴纸装扮" onBack={a.back} />
       <div className="page-content appearance-pet">
         <div className="appearance-stage">
           <div className="profile-blob" />
-          <PetArt pet={{ ...pet, photo: "", tone, body }} />
+          <PetArt pet={{ ...pet, tone, body }} />
         </div>
-        <SectionTitle>毛色</SectionTitle>
+        <SectionTitle>色调</SectionTitle>
         <div className="fur-colors">
           {[
             ["original", "原色"],
@@ -731,7 +695,7 @@ export function PetAppearance({ a, pet }) {
               a.commit({
                 ...a.data,
                 pets: a.data.pets.map((p) =>
-                  p.id === pet.id ? { ...p, tone, body, photo: "" } : p,
+                  p.id === pet.id ? { ...p, tone, body } : p,
                 ),
               })
             ) {

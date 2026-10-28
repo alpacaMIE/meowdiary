@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
-import { loadData, uid, TODAY, groupLabels, defaultFilters } from "./data";
-import { Icon, Empty, Primary, PetArt } from "./ui";
+import { loadData, uid, TODAY, groupLabels, defaultFilters, toggleReminder } from "./data";
+import { Icon, Empty, Primary, PetArt, StickerFilters } from "./ui";
 import { Home, Timeline, Pets } from "./HomeTimeline";
 import {
   PetDetail,
@@ -236,6 +236,10 @@ export default function App() {
     }
   }
   const a = {
+    completeReminder: (reminder) => {
+      if (commit({ ...data, reminders: toggleReminder(data.reminders, reminder) }))
+        toast(reminder.done ? "已恢复待办" : reminder.repeat && reminder.repeat !== "从不" ? "完成啦，下次提醒已安排" : "完成一件小事！");
+    },
     data,
     currentPet,
     commit,
@@ -351,6 +355,7 @@ export default function App() {
   }
   return (
     <div className="app-shell">
+      <StickerFilters />
       <main
         className={`app-scroll ${!page && currentPet ? "with-tabs" : ""}`}
         ref={scroll}

@@ -7,6 +7,7 @@ import {
   makeCSV,
   TODAY,
   dayOffset,
+  toggleReminder,
 } from "../src/data.js";
 
 test("pet, type, date and search filters intersect without mutating data", () => {
@@ -28,6 +29,29 @@ test("pet, type, date and search filters intersect without mutating data", () =>
     ["diary-1"],
   );
   assert.equal(JSON.stringify(records), before);
+});
+
+test("completing an overdue daily task schedules exactly one future occurrence", () => {
+  const reminder = { id: "task", petId: "tuanzi", type: "刷牙", date: "2026-10-25T20:00", repeat: "每天", done: false };
+  const reminders = [reminder];
+  const now = new Date("2026-10-28T21:00");
+  const result = toggleReminder(reminders, reminder, now);
+  assert.equal(reminder.done, false);
+  assert.equal(result[0].done, true);
+  assert.equal(result.length, 2);
+  assert.equal(result[1].date, "2026-10-29T20:00");
+  assert.equal(result[1].petId, "tuanzi");
+  const restored = toggleReminder(result, result[0], now);
+  assert.equal(restored[0].done, false);
+  assert.equal(toggleReminder(restored, restored[0], now).length, 2);
+});
+
+test("a one-time task toggles without creating a record or another reminder", () => {
+  const reminder = { id: "once", petId: "xiaomi", type: "梳毛", date: "2026-10-28T20:00", repeat: "从不", done: false };
+  const result = toggleReminder([reminder], reminder);
+  assert.equal(result.length, 1);
+  assert.deepEqual(result[0], { ...reminder, done: true });
+  assert.deepEqual(toggleReminder(result, result[0]), [reminder]);
 });
 test("an explicitly empty pet selection never means all pets", () => {
   assert.equal(

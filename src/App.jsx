@@ -384,7 +384,7 @@ export default function App() {
                 key={id}
                 className="nav-add"
                 aria-label="新增记录"
-                onClick={() => setSheet({ kind: "quick" })}
+                onClick={() => setSheet({ kind: "types" })}
               >
                 <Icon name="Plus" size={29} />
               </button>

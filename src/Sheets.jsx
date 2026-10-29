@@ -23,20 +23,6 @@ import {
   Segmented,
 } from "./ui";
 
-function QuickAdd({ a }) {
-  const [petId, setPetId] = useState(a.currentPet.id);
-  return <Sheet title="新增记录" className="quick-sheet" onClose={() => a.setSheet(null)}>
-    <PetSelect pets={a.data.pets} value={petId} onChange={setPetId} />
-    <div className="quick-record-list">
-      {[["diary", "BookOpen", "写日记"], ["food", "Soup", "记喂食"], ["weight", "Scale", "记体重"], ["health", "Syringe", "疫苗 / 驱虫"]].map(([group, icon, label]) =>
-        <button key={group} className={`quick-record ${group}`} onClick={() => { a.setSheet(null); a.openForm(group, group === "health" ? "猫三联疫苗" : undefined, petId); }}>
-          <StickerIcon name={icon} size={58} /><strong>{label}</strong><Icon name="ChevronRight" />
-        </button>)}
-    </div>
-    <button className="more-records" onClick={() => a.setSheet({ kind: "types", petId })}><Icon name="Grid2X2" size={19} />更多记录类型<span>记事、提醒、记账、体征、囤货</span><Icon name="ChevronRight" size={18} /></button>
-  </Sheet>;
-}
-
 export function Catalog({ a, sheet }) {
   const [group, setGroup] = useState(sheet.group || "note"),
     [search, setSearch] = useState(""),
@@ -351,7 +337,6 @@ export function FilterSheet({ a }) {
 export function AppSheets({ a }) {
   const s = a.sheet;
   if (!s) return null;
-  if (s.kind === "quick") return <QuickAdd a={a} />;
   if (s.kind === "types") return <Catalog a={a} sheet={s} />;
   if (s.kind === "filters") return <FilterSheet a={a} />;
   if (s.kind === "pets")

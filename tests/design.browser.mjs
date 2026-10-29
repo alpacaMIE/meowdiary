@@ -40,7 +40,8 @@ try {
     };
     await button("写日记").waitFor(); await shot("01-home");
     await nav("新增记录"); await shot("05-quick-add");
-    await page.getByRole("dialog").getByRole("button", { name: "写日记", exact: true }).click();
+    assert.deepEqual(await page.locator('.catalog-tabs button').allTextContents(), ["记事", "提醒", "记账", "体征", "囤货"]);
+    await page.getByRole("dialog").getByRole("button", { name: "日记", exact: true }).click();
     await page.getByLabel("日记标题", { exact: true }).fill("今天的故事");
     await page.getByLabel("日记正文", { exact: true }).fill("今天天气很好，团子在阳台晒太阳，还和最喜欢的蝴蝶玩了一会儿。心情看起来很不错～");
     await page.getByLabel("日记位置").fill("阳台"); await page.getByLabel("日记标签").fill("晒太阳,开心");
@@ -88,9 +89,9 @@ try {
       if (name === "可读资料导出") { const download = page.waitForEvent("download"); await button("导出所选内容").click(); assert.ok((await download).suggestedFilename().endsWith('.csv')); }
       await back();
     }
-    await nav("新增记录"); await page.getByRole('button', { name: /^更多记录类型/ }).click(); await shot("catalog"); await button("关闭").click();
+    await nav("新增记录"); await shot("catalog"); await button("关闭").click();
     for (const [label, id] of [["记事", "note"], ["提醒", "reminder"], ["记账", "expense"], ["体征", "symptom"], ["囤货", "stock"]]) {
-      await nav("新增记录"); await page.getByRole('button', { name: /^更多记录类型/ }).click();
+      await nav("新增记录");
       await page.locator('.catalog-tabs').getByRole('button', { name: label, exact: true }).click();
       await page.locator('.type-grid button').first().click(); await shot(`form-${id}`); await back();
     }

@@ -10,8 +10,10 @@ import {
   Chips,
   Segmented,
   TypeIcon,
+  StickerIcon,
+  SectionTitle,
 } from "./ui";
-import { TODAY, uid, groupLabels, iconFor } from "./data";
+import { TODAY, uid, groupLabels, iconFor, dateLabel } from "./data";
 import { HOUSEHOLD, householdPet } from "./careData";
 
 export async function readPhoto(file) {
@@ -87,6 +89,8 @@ export function RecordForm({
   page,
   pets,
   record,
+  records = [],
+  onRecord,
   currentPetId,
   onBack,
   onSave,
@@ -145,6 +149,9 @@ export function RecordForm({
     dirty
       ? ask("放弃这次编辑？", "尚未保存的内容将不会保留。", onBack, "放弃编辑")
       : onBack();
+  const viewRecord = (id) => dirty
+    ? ask("放弃这次编辑？", "尚未保存的内容将不会保留。", () => onRecord(id), "放弃编辑")
+    : onRecord(id);
   const pool = ["note", "reminder", "expense", "symptom", "stock"].includes(
     group,
   )
@@ -207,7 +214,7 @@ export function RecordForm({
       />
       <form
         id="record-form"
-        className="page-content form-page"
+        className={`page-content form-page form-${group}`}
         onSubmit={submit}
       >
         <div className="form-context">
@@ -216,6 +223,7 @@ export function RecordForm({
             value={form.petId}
             onChange={(v) => set("petId", v)}
           />
+          {group === "diary" && <label className="diary-date"><StickerIcon name="CalendarDays" size={28} /><input aria-label="记录时间" type="datetime-local" required value={form.date} onChange={e => set("date", e.target.value)} /></label>}
         </div>
         {group === "expense" && (
           <Segmented
@@ -239,14 +247,16 @@ export function RecordForm({
         )}
         {group === "diary" && (
           <>
+            <div className="diary-heading"><StickerIcon name="BookOpen" size={39} />
             <input
               className="diary-title"
               aria-label="日记标题"
-              placeholder="给今天起个名字"
+              placeholder="今天的故事"
               maxLength={60}
               value={form.title}
               onChange={(e) => set("title", e.target.value)}
             />
+            </div>
             <div className="diary-editor">
               <textarea
                 aria-label="日记正文"
@@ -305,8 +315,8 @@ export function RecordForm({
         )}
         {group === "expense" && record?.sourceStockId && <p className="link-note">这笔账来自囤货。保存修改后将独立保留。</p>}
         {group === "food" && (
-          <div className="form-card">
-            <Field label="食物名称">
+          <div className="form-card food-data">
+            <Field label="食物名称" icon="Soup">
               <input
                 placeholder="例如：鸡肉冻干猫粮"
                 value={form.food}
@@ -315,7 +325,7 @@ export function RecordForm({
                 maxLength={50}
               />
             </Field>
-            <Field label="数量">
+            <Field label="数量" icon="Scale">
               <div className="input-with-unit">
                 <input
                   aria-label="喂食数量"
@@ -338,6 +348,7 @@ export function RecordForm({
                 </select>
               </div>
             </Field>
+            <Field label="日期时间" icon="CalendarDays"><input aria-label="记录时间" type="datetime-local" required value={form.date} onChange={e => set("date", e.target.value)} /></Field>
           </div>
         )}
         {group === "stock" && (
@@ -408,7 +419,7 @@ export function RecordForm({
             {record?.bookExpense && !form.bookExpense && <p className="link-note">已生成的账单会保留，可在账本中编辑或删除。</p>}
           </div>
         )}
-        <div className="form-card">
+        {!["diary", "food"].includes(group) && <div className="form-card">
           {group === "reminder" ? (
             <>
               <Field label="开始日期">
@@ -498,7 +509,7 @@ export function RecordForm({
               </Field>
             </>
           )}
-        </div>
+        </div>}
         {group !== "diary" && (
           <div className="note-field">
             <label htmlFor="note">
@@ -516,16 +527,23 @@ export function RecordForm({
             />
           </div>
         )}
-        {group !== "reminder" && (
+        {!["reminder", "food"].includes(group) && (
           <PhotoInput
             photos={form.photos}
             onChange={(v) => set("photos", v)}
             toast={toast}
           />
         )}
+        {group === "diary" && <div className="diary-extras">
+          <label><StickerIcon name="MapPin" size={33} /><input aria-label="日记位置" placeholder="添加位置" maxLength={80} value={form.location} onChange={e => set("location", e.target.value)} /><Icon name="ChevronRight" size={18} /></label>
+          <label><StickerIcon name="Heart" size={33} /><input aria-label="日记标签" placeholder="添加标签，用逗号分隔" maxLength={80} value={form.tags || ""} onChange={e => set("tags", e.target.value)} /><Icon name="ChevronRight" size={18} /></label>
+        </div>}
+        {group === "food" && <section className="food-recent"><SectionTitle>最近喂食记录</SectionTitle><div className="card food-history">
+          {records.filter(r => r.group === "food" && r.petId === form.petId).sort((x, y) => y.date.localeCompare(x.date)).slice(0, 4).map(r => <button type="button" key={r.id} onClick={() => viewRecord(r.id)}><StickerIcon name="Soup" size={33} /><time>{dateLabel(r.date)}<br />{r.date.slice(11, 16)}</time><strong>{r.food || r.type}</strong><small>{r.quantity} {r.unit}</small><Icon name="ChevronRight" size={17} /></button>)}
+          {!records.some(r => r.group === "food" && r.petId === form.petId) && <p className="quiet-empty">从这一餐开始记录</p>}
+        </div><details className="food-attachments"><summary>添加照片（选填）</summary><PhotoInput photos={form.photos} onChange={v => set("photos", v)} toast={toast} /></details></section>}
         <Primary type="submit" disabled={saving}>
-          <Icon name="Check" size={19} />
-          {saving ? "保存中…" : group === "reminder" ? "保存提醒" : "保存记录"}
+          {saving ? "保存中…" : group === "reminder" ? "保存提醒" : group === "diary" ? "保存日记" : group === "food" ? "保存喂食记录" : "保存记录"}
         </Primary>
       </form>
     </>

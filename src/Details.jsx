@@ -33,7 +33,8 @@ export function PetDetail({ a, pet }) {
       .filter((r) => r.petId === pet.id)
       .sort((x, y) => y.date.localeCompare(x.date)),
     weight = records.find((r) => r.group === "weight");
-  const count = (g) => records.filter((r) => r.group === g).length;
+  const healthCount = (pattern) => records.filter(r => ["health", "note"].includes(r.group) && pattern.test(r.type)).length;
+  const nextCare = (pattern) => a.data.reminders.filter(r => r.petId === pet.id && !r.done && pattern.test(r.type)).sort((x, y) => x.date.localeCompare(y.date))[0];
   return (
     <>
       <Topbar
@@ -51,10 +52,13 @@ export function PetDetail({ a, pet }) {
       <div className="page-content detail-page">
         <div className="profile-stage">
           <div className="profile-blob" />
+          <span className="doodle-heart heart-left" aria-hidden="true"><Icon name="Heart" size={23} /></span>
+          <span className="doodle-heart heart-right" aria-hidden="true"><Icon name="Heart" size={20} /></span>
+          <span className="doodle-ball" aria-hidden="true" />
           <PetArt pet={pet} />
           <button
             className="profile-customize"
-            aria-label="编辑宠物形象"
+            aria-label="编辑猫咪形象"
             onClick={() => a.go({ name: "appearance-pet", id: pet.id })}
           >
             <Icon name="Sparkles" size={20} />
@@ -83,6 +87,7 @@ export function PetDetail({ a, pet }) {
               weight ? Number(weight.weight).toFixed(2) : "—",
               "kg",
               "weight",
+              weight ? dateLabel(weight.date) : "还没有记录",
             ],
             [
               "Soup",
@@ -92,15 +97,16 @@ export function PetDetail({ a, pet }) {
               ).length,
               "次",
               "food",
+              "今天",
             ],
-            ["ShieldCheck", "健康护理", count("health") + count("symptom"), "条", "health"],
-            ["BookOpen", "日记", count("diary"), "篇", "diary"],
-          ].map(([icon, label, value, unit, target]) => (
+            ["Syringe", "疫苗", healthCount(/疫苗|联$/), "次", "vaccine", nextCare(/疫苗|联$/) ? `下次 ${dateLabel(nextCare(/疫苗|联$/).date)}` : "暂无下次提醒"],
+            ["ShieldCheck", "驱虫", healthCount(/驱/), "次", "deworm", nextCare(/驱/) ? `下次 ${dateLabel(nextCare(/驱/).date)}` : "暂无下次提醒"],
+          ].map(([icon, label, value, unit, target, caption]) => (
             <button
               key={target}
               onClick={() => {
-                if (target === "weight" || target === "health")
-                  a.go({ name: target, id: pet.id });
+                if (["weight", "vaccine", "deworm"].includes(target))
+                  a.go({ name: target === "weight" ? "weight" : "health", id: pet.id, mode: target });
                 else {
                   a.setFilters({
                     pets: [pet.id],
@@ -124,6 +130,7 @@ export function PetDetail({ a, pet }) {
                   {value}
                   <small>{unit}</small>
                 </strong>
+                <small className="stat-caption">{caption}</small>
               </span>
               <Icon name="ChevronRight" size={15} />
             </button>
@@ -133,11 +140,14 @@ export function PetDetail({ a, pet }) {
           <Row
             icon="ClipboardList"
             label="基本资料"
+            description="名字、品种、生日与到家日"
             onClick={() => a.go({ name: "pet-form", id: pet.id })}
           />
+          <Row icon="Syringe" label="健康与护理" description="疫苗、驱虫与体征记录" tone="sage" onClick={() => a.go({ name: "health", id: pet.id })} />
           <Row
             icon="Images"
             label="照片与日记"
+            description="珍藏每一个可爱瞬间"
             tone="pink"
             onClick={() => {
               a.setFilters({
@@ -154,6 +164,7 @@ export function PetDetail({ a, pet }) {
           <Row
             icon="Bell"
             label="提醒与待办"
+            description="照顾它的每一件小事"
             onClick={() => a.go({ name: "reminders", id: pet.id })}
           />
           <Row
@@ -192,6 +203,7 @@ export function Weight({ a, pet }) {
   const path = entries
     .map((r, i) => `${i ? "L" : "M"}${x(i)},${y(r.weight)}`)
     .join(" ");
+  const highlighted = selected !== null && entries[selected] ? selected : entries.length - 1;
   return (
     <>
       <Topbar title="体重曲线" onBack={a.back} />
@@ -281,7 +293,7 @@ export function Weight({ a, pet }) {
                   <circle
                     cx={x(i)}
                     cy={y(r.weight)}
-                    r={selected === i ? 6 : 4}
+                    r={highlighted === i ? 5 : 4}
                     className="chart-dot"
                     onClick={() => setSelected(i)}
                     role="button"
@@ -306,10 +318,10 @@ export function Weight({ a, pet }) {
                 </g>
               ))}
             </svg>
-            {selected !== null && (
+            {highlighted >= 0 && (
               <div className="chart-tooltip">
-                {dateLabel(entries[selected].date)} ·{" "}
-                {entries[selected].weight.toFixed(2)} kg
+                {dateLabel(entries[highlighted].date)} ·{" "}
+                {Number(entries[highlighted].weight).toFixed(2)} kg
               </div>
             )}
           </div>
@@ -349,7 +361,7 @@ export function Weight({ a, pet }) {
   );
 }
 export function Reminders({ a, petId }) {
-  const [mode, setMode] = useState("pending");
+  const [mode, setMode] = useState("today");
   const all = a.data.reminders.filter((r) => !petId || r.petId === petId);
   const filtered = all
     .filter((r) =>
@@ -357,7 +369,7 @@ export function Reminders({ a, petId }) {
         ? r.done
         : mode === "today"
           ? !r.done && r.date.slice(0, 10) <= TODAY
-          : !r.done,
+          : !r.done && r.date.slice(0, 10) > TODAY,
     )
     .sort((x, y) => x.date.localeCompare(y.date));
   const complete = a.completeReminder;
@@ -379,9 +391,7 @@ export function Reminders({ a, petId }) {
           <div>
             <Icon name="Sun" size={24} />
             <h2>
-              小小的惦记，
-              <br />
-              大大的爱。
+              小小的惦记
             </h2>
           </div>
           <PetArt
@@ -390,17 +400,22 @@ export function Reminders({ a, petId }) {
         </div>
         <Segmented
           items={[
-            ["pending", `待办 ${all.filter((r) => !r.done).length}`],
-            ["today", "今天"],
+            ["today", `今天 (${all.filter(r => !r.done && r.date.slice(0, 10) <= TODAY).length})`],
+            ["pending", `即将到来 (${all.filter(r => !r.done && r.date.slice(0, 10) > TODAY).length})`],
             ["done", `已完成 ${all.filter((r) => r.done).length}`],
           ]}
           value={mode}
           onChange={setMode}
         />
         <div className="reminder-list">
-          {filtered.map((r) => {
+          {filtered.map((r, index) => {
             const p = a.data.pets.find((p) => p.id === r.petId);
+            const section = r.done ? "已完成" : r.date.slice(0, 10) <= TODAY ? "今天" : "即将到来";
+            const previous = filtered[index - 1];
+            const previousSection = previous && (previous.done ? "已完成" : previous.date.slice(0, 10) <= TODAY ? "今天" : "即将到来");
             return (
+              <React.Fragment key={r.id}>
+              {section !== previousSection && <h2 className="reminder-section-title">{section}</h2>}
               <div
                 className={`reminder-item ${r.done ? "completed" : ""}`}
                 key={r.id}
@@ -456,6 +471,7 @@ export function Reminders({ a, petId }) {
                   <Icon name="Trash2" size={16} />
                 </button>
               </div>
+              </React.Fragment>
             );
           })}
           {!filtered.length && (
@@ -517,29 +533,19 @@ export function Health({ a, pet }) {
             {!records.length && <Empty icon="HeartPulse" title="还没有体征记录" />}
           </div>
         </> : <>
-        <SectionTitle>下次计划</SectionTitle>
-        <div className="card">
-          {reminders.map((r) => (
-            <Row
-              key={r.id}
-              icon="CalendarClock"
-              label={r.type}
-              value={dateLabel(r.date)}
-              onClick={() =>
-                a.go({
-                  name: "form",
-                  group: "reminder",
-                  type: r.type,
-                  editId: r.id,
-                })
-              }
-            />
-          ))}
-          {!reminders.length && (
-            <div className="quiet-empty">还没有安排下一次提醒</div>
-          )}
+        <div className="care-overview">
+          {[...new Set([...records.map(r => r.type), ...reminders.map(r => r.type)])].map(type => {
+            const latest = records.find(r => r.type === type);
+            const next = reminders.filter(r => r.type === type).sort((x, y) => x.date.localeCompare(y.date))[0];
+            return <section className="care-card card" key={type}><h3><StickerIcon name={mode === "vaccine" ? "Syringe" : "ShieldCheck"} size={51} />{type}</h3>
+              <button onClick={() => latest ? a.go({ name: "record", id: latest.id }) : a.openForm("health", type, pet.id)}><span>{mode === "vaccine" ? "上次接种" : "上次驱虫"}</span><strong>{latest ? latest.date.slice(0, 10).replaceAll("-", ".") : "添加记录"}</strong><Icon name="ChevronRight" size={17} /></button>
+              <button className="next-care" onClick={() => a.go({ name: "form", group: "reminder", type, petId: pet.id, ...(next ? { editId: next.id } : {}) })}><span>下次提醒</span><strong>{next ? next.date.slice(0, 10).replaceAll("-", ".") : "设置提醒"}</strong><Icon name="CalendarDays" size={19} /></button>
+            </section>;
+          })}
+          {!records.length && !reminders.length && <Empty icon="Syringe" title="还没有护理记录" />}
         </div>
-        <SectionTitle>已完成记录</SectionTitle>
+        <Primary onClick={() => a.openForm("health", mode === "vaccine" ? "猫三联疫苗" : "外驱", pet.id)}><Icon name="Plus" size={21} />添加护理记录</Primary>
+        <SectionTitle>历史记录</SectionTitle>
         <div className="card">
           {records.map((r) => (
             <RecordRow key={r.id} record={r} a={a} />
@@ -549,18 +555,14 @@ export function Health({ a, pet }) {
           )}
         </div>
         </>}
-        <Primary
+        {mode === "symptom" && <Primary
           onClick={() =>
-            a.openForm(
-              mode === "symptom" ? "symptom" : "health",
-              mode === "symptom" ? "软便" : mode === "vaccine" ? "猫三联疫苗" : "外驱",
-              pet.id,
-            )
+            a.openForm("symptom", "软便", pet.id)
           }
         >
           <Icon name="Plus" size={21} />
-          {mode === "symptom" ? "记录体征" : "添加护理记录"}
-        </Primary>
+          记录体征
+        </Primary>}
       </div>
     </>
   );
@@ -596,6 +598,7 @@ export function RecordDetail({ a, record: r }) {
           <h1>{summary(r)}</h1>
         </div>
         {r.note && <p className="record-note">{r.note}</p>}
+        {r.tags && <div className="record-tags">{r.tags.split(/[,，]/).filter(Boolean).map((tag, i) => <span key={i}>#{tag.trim()}</span>)}</div>}
         {["hospital", "expiry", "location"]
           .filter((k) => r[k])
           .map((k) => (
@@ -605,7 +608,7 @@ export function RecordDetail({ a, record: r }) {
                   {
                     hospital: "医院 / 品牌",
                     expiry: "有效期",
-                    location: "存放位置",
+                    location: r.group === "diary" ? "地点" : "存放位置",
                     repeat: "重复",
                   }[k]
                 }
@@ -659,13 +662,14 @@ export function PetAppearance({ a, pet }) {
     [body, setBody] = useState(pet.body);
   return (
     <>
-      <Topbar title="贴纸装扮" onBack={a.back} />
+      <Topbar title="编辑猫咪形象" onBack={a.back} />
       <div className="page-content appearance-pet">
         <div className="appearance-stage">
           <div className="profile-blob" />
           <PetArt pet={{ ...pet, tone, body }} />
         </div>
-        <SectionTitle>色调</SectionTitle>
+        <div className="card settings-group appearance-breed"><Row icon="Cat" label="品种" value={pet.breed || "暂未填写"} onClick={() => a.go({ name: "pet-form", id: pet.id })} /></div>
+        <SectionTitle>毛色 / 花纹</SectionTitle>
         <div className="fur-colors">
           {[
             ["original", "原色"],
@@ -696,7 +700,7 @@ export function PetAppearance({ a, pet }) {
               aria-pressed={body === id}
               onClick={() => setBody(id)}
             >
-              <Icon name={pet.species === "狗" ? "Dog" : "Cat"} size={30} />
+              <Icon name="Cat" size={30} />
               {label}
             </button>
           ))}
@@ -717,8 +721,7 @@ export function PetAppearance({ a, pet }) {
             }
           }}
         >
-          使用这个形象
-          <Icon name="Check" size={18} />
+          保存形象
         </Primary>
       </div>
     </>

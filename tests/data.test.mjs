@@ -12,6 +12,14 @@ import {
 } from "../src/data.js";
 import { HOUSEHOLD, isLifeRecord, stockStatus, selectStock, adjustStock, saveManagedRecord, deleteManagedRecord, addStockReminder, expenseSummary, symptomSummary } from "../src/careData.js";
 
+test("multiple record types intersect with cats and dates without including unrelated records", () => {
+  const records = seedData().records;
+  const result = filterRecords(records, { ...defaultFilters, pets: ["tuanzi"], groups: ["diary", "weight"], from: TODAY, to: TODAY });
+  assert.ok(result.length >= 2);
+  assert.ok(result.every(r => r.petId === "tuanzi" && ["diary", "weight"].includes(r.group) && r.date.startsWith(TODAY)));
+  assert.equal(filterRecords(records, { ...defaultFilters, groups: [] }).length, records.length);
+});
+
 test("stock is current balance, ordered by expiry, with shared supplies and a separate empty shelf", () => {
   const records = [
     { id: "fresh", group: "stock", petId: "a", type: "食品", itemName: "猫粮", quantity: 3, expiry: "2027-01-01" },

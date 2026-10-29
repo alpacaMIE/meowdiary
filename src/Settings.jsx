@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Icon,
+  StickerIcon,
   Avatar,
   PetArt,
   Primary,
@@ -48,8 +49,6 @@ export function Me({ a }) {
       </button>
       <SectionTitle>常用功能</SectionTitle>
       <div className="card settings-group">
-        <Row icon="Package" label="囤货清单" tone="sage" value={`${stock.length} 件${due ? ` · ${due} 件临期` : ""}`} onClick={() => a.go({ name: "stock" })} />
-        <Row icon="Wallet" label="养宠账本" tone="yellow" value={`本月 ¥${money(spent)}`} onClick={() => a.go({ name: "ledger" })} />
         <Row
           icon="Bell"
           label="提醒与待办"
@@ -110,6 +109,11 @@ export function Me({ a }) {
           onClick={() => a.go({ name: "privacy" })}
         />
       </div>
+      <SectionTitle>猫咪生活</SectionTitle>
+      <div className="card settings-group">
+        <Row icon="Package" label="囤货清单" tone="sage" value={`${stock.length} 件${due ? ` · ${due} 件临期` : ""}`} onClick={() => a.go({ name: "stock" })} />
+        <Row icon="Wallet" label="养宠账本" tone="yellow" value={`本月 ¥${money(spent)}`} onClick={() => a.go({ name: "ledger" })} />
+      </div>
       <SectionTitle>帮助与关于</SectionTitle>
       <div className="card settings-group">
         <Row
@@ -140,9 +144,9 @@ export function Display({ a }) {
         <SectionTitle>外观模式</SectionTitle>
         <div className="theme-picker">
           {[
-            ["system", "Monitor", "跟随系统"],
-            ["light", "Sun", "浅色"],
-            ["dark", "Moon", "深色"],
+            ["system", "Sun", "跟随系统"],
+            ["light", "Sun", "浅色模式"],
+            ["dark", "Moon", "深色模式"],
           ].map(([id, icon, label]) => (
             <button
               className={a.data.settings.theme === id ? "selected" : ""}
@@ -150,13 +154,8 @@ export function Display({ a }) {
               key={id}
               onClick={() => a.setSettings({ theme: id })}
             >
-              <span className={`theme-swatch ${id}`}>
-                <i />
-                <i />
-                <i />
-              </span>
+              <Icon name={icon} className={`theme-symbol ${id}`} size={44} />
               <span>
-                <Icon name={icon} size={16} />
                 {label}
               </span>
               {a.data.settings.theme === id && (
@@ -183,12 +182,12 @@ export function Display({ a }) {
         </p>
         <SectionTitle>预览</SectionTitle>
         <div className="card preview-card">
-          <div className="pet-inline">
-            <Avatar pet={a.currentPet} />
+          <div>
             <h3>和{a.currentPet.name}一起记录生活</h3>
+            <p>今天也是有你陪伴的一天。</p>
+            <span className="muted">{dateLabel(TODAY)}</span>
           </div>
-          <p>阳光落在窗边，小日子慢慢过。</p>
-          <span className="muted">今天 · 温暖的陪伴</span>
+          <img src={petImage(a.currentPet)} alt={a.currentPet.name} />
         </div>
       </div>
     </>
@@ -216,11 +215,11 @@ export function Notifications({ a }) {
     <>
       <Topbar title="通知与提醒" onBack={a.back} />
       <div className="page-content settings-page">
-        <SectionTitle>浏览器通知</SectionTitle>
+        <SectionTitle>系统通知权限</SectionTitle>
         <div className="card settings-group">
           <Row
             icon="Bell"
-            label="通知权限"
+            label="通知授权状态"
             value={
               {
                 granted: "已允许",
@@ -251,7 +250,7 @@ export function Notifications({ a }) {
           )}
         </div>
         <p className="small-note">
-          当前为纯前端原型。通知仅在页面打开时触发，关闭页面后不会后台推送。
+          关闭通知后，待办仍会保留。提醒仅在页面打开时发送。
         </p>
         <SectionTitle>我的提醒</SectionTitle>
         <div className="card settings-group">
@@ -273,9 +272,10 @@ export function Notifications({ a }) {
             onClick={() => a.setSheet({ kind: "types", group: "reminder" })}
           />
         </div>
-        <div className="card info-card">
+        <SectionTitle>提醒与记录</SectionTitle>
+        <div className="card info-card notification-note">
           <Icon name="CalendarHeart" size={25} />
-          <h3>记得，也要记录</h3>
+          <h3>计划和实际记录分开</h3>
           <p>
             完成待办只会更新计划状态。实际的喂食、护理和体重，需要单独保存为记录。
           </p>
@@ -293,13 +293,15 @@ export function Storage({ a }) {
     <>
       <Topbar title="本地数据管理" onBack={a.back} />
       <div className="page-content settings-page">
+        <SectionTitle>本地数据概览</SectionTitle>
         <div className="storage-stat card">
           {[
-            [a.data.pets.length, "只宠物"],
-            [a.data.records.length, "条记录"],
-            [photos, "张照片"],
-          ].map(([num, label]) => (
+            [a.data.pets.length, "只猫咪", "Cat"],
+            [a.data.records.length, "条记录", "BookOpen"],
+            [photos, "张照片", "Images"],
+          ].map(([num, label, icon]) => (
             <div key={label}>
+              <StickerIcon name={icon} size={48} />
               <strong>{num}</strong>
               <span>{label}</span>
             </div>
@@ -313,15 +315,8 @@ export function Storage({ a }) {
             tone="yellow"
             onClick={() => a.go({ name: "export" })}
           />
-          <div className="storage-usage">
-            <Icon name="HardDrive" size={20} />
-            <span>浏览器中的资料</span>
-            <strong>{(bytes / 1024).toFixed(1)} KB</strong>
-          </div>
-        </div>
-        <div className="card info-card">
-          <Icon name="LockKeyhole" size={24} />
-          <h3>小日常，留在这里</h3>
+          <details className="storage-details"><summary><StickerIcon name="Database" size={44} /><span>本地存储说明</span><Icon name="ChevronRight" size={17} /></summary>
+          <div className="storage-usage"><span>浏览器中的资料</span><strong>{(bytes / 1024).toFixed(1)} KB</strong></div>
           <p>
             资料保存在当前浏览器。图片上传后会压缩保存在本地；内置示例素材不计入浏览器存储空间。
           </p>
@@ -329,15 +324,17 @@ export function Storage({ a }) {
             清除网站数据或更换浏览器会失去本地资料。CSV
             导出为可读资料，不包含原始照片，也不能用于完整恢复。
           </p>
+          </details>
         </div>
         <SectionTitle>权限与隐私</SectionTitle>
         <div className="card settings-group">
           <Row
             icon="Image"
-            label="照片与文件"
+            label="照片访问权限"
             value="手动选择"
             onClick={() => a.go({ name: "privacy" })}
           />
+          <Row icon="Bell" label="通知权限" value="受浏览器控制" onClick={() => a.go({ name: "notifications" })} />
           <Row
             icon="Shield"
             label="数据说明"
@@ -345,6 +342,7 @@ export function Storage({ a }) {
             onClick={() => a.go({ name: "privacy" })}
           />
         </div>
+        <div className="storage-local-note"><Icon name="PawPrint" size={21} />本版数据保存在设备本地。</div>
       </div>
     </>
   );
@@ -449,15 +447,14 @@ export function Export({ a }) {
   }
   return (
     <>
-      <Topbar title="可读资料导出" onBack={a.back} />
+      <Topbar title="导出资料" onBack={a.back} />
       <div className="page-content export-page">
         <div className="export-hero">
-          <span className="type-icon stock">
-            <Icon name="FileDown" size={30} />
-          </span>
-          <h2>收藏陪伴的点滴</h2>
+          <StickerIcon name="FileDown" size={52} />
+          <h2>导出可读资料</h2>
+          <PetArt pet={a.currentPet} />
         </div>
-        <SectionTitle>宠物</SectionTitle>
+        <SectionTitle>选择猫咪</SectionTitle>
         <div className="export-pets">
           {exportPets.map((p) => (
             <button
@@ -475,7 +472,7 @@ export function Export({ a }) {
             </button>
           ))}
         </div>
-        <SectionTitle>导出内容</SectionTitle>
+        <SectionTitle>选择导出内容</SectionTitle>
         <div className="card export-options">
           {[["profile", "基本资料"], ...Object.entries(groupLabels)].map(
             ([id, label]) => (
@@ -485,8 +482,10 @@ export function Export({ a }) {
                   checked={groups.includes(id)}
                   onChange={() => toggle(groups, setGroups, id)}
                 />
-                <span>{label}</span>
+                <StickerIcon name={{ profile: "Cat", diary: "BookOpen", food: "Soup", weight: "Scale", health: "Syringe", reminder: "ClipboardList", expense: "Wallet", stock: "Package", symptom: "HeartPulse", note: "NotebookPen" }[id]} size={40} />
+                <span className="export-copy">{label}<small>{{ profile: "名字、品种、生日等", diary: "文字内容、日期", food: "时间、食物、数量等", weight: "日期、体重、备注", health: "日期、项目、下次提醒等", reminder: "计划内容、重复规则等", expense: "收支、金额、日期", stock: "余量、有效期、存放位置", symptom: "观察情况与日期", note: "每一件猫咪小事" }[id]}</small></span>
                 <Icon
+                  className="export-check"
                   name={groups.includes(id) ? "CircleCheck" : "Circle"}
                   size={20}
                 />
@@ -511,6 +510,8 @@ export function Export({ a }) {
             onChange={(e) => setTo(e.target.value)}
           />
         </div>
+        <SectionTitle>导出格式</SectionTitle>
+        <div className="export-format"><StickerIcon name="FileDown" size={44} />CSV 文件（推荐）</div>
         <p className="small-note">
           CSV 文件 · 不选日期则导出全部 · 不含照片原件
         </p>
@@ -521,7 +522,7 @@ export function Export({ a }) {
           onClick={exportNow}
         >
           <Icon name="Download" size={19} />
-          导出所选资料
+          导出所选内容
         </Primary>
       </div>
     </>
@@ -535,7 +536,7 @@ export function Share({ a, pet, record }) {
     sage: ["#ffffff", "#b5cd9f"],
     rose: ["#ffffff", "#f2b5a9"],
   };
-  async function save() {
+  async function save(share = false) {
     setBusy(true);
     try {
       const canvas = document.createElement("canvas");
@@ -554,11 +555,14 @@ export function Share({ a, pet, record }) {
       c.fillRect(-95, -20, 190, 40);
       c.restore();
       c.fillStyle = "#30302e";
-      c.font = 'bold 74px "Microsoft YaHei", sans-serif';
+      let nameSize = 74;
+      do { c.font = `bold ${nameSize}px "Microsoft YaHei", sans-serif`; nameSize -= 2; } while (c.measureText(pet.name).width > 760 && nameSize > 28);
       c.fillText(pet.name, 70, 145);
-      c.fillStyle = "#858580";
-      c.font = '27px "Microsoft YaHei", sans-serif';
-      c.fillText(`${pet.breed} · ${ageLabel(pet.birthday)}`, 74, 200);
+      c.fillStyle = "#30302e";
+      c.font = '34px "Microsoft YaHei", sans-serif';
+      c.fillText(pet.breed || "猫咪", 74, 200, 740);
+      c.fillStyle = palettes[theme][1]; c.beginPath(); c.roundRect(70, 224, 245, 55, 28); c.fill();
+      c.fillStyle = "#30302e"; c.font = '28px "Microsoft YaHei", sans-serif'; c.fillText(ageLabel(pet.birthday), 90, 261);
       const img = await new Promise((resolve, reject) => {
         const i = new Image();
         i.onload = () => resolve(i);
@@ -566,7 +570,7 @@ export function Share({ a, pet, record }) {
         i.src = petImage(pet);
       });
       const crop = !pet.photo && pet.imageCrop ? pet.imageCrop : [0, 0, img.width, img.height];
-      const ratio = Math.min(700 / crop[2], 650 / crop[3]);
+      const ratio = Math.min(590 / crop[2], 620 / crop[3]);
       const bodyScale =
         pet.body === "slim" ? 0.9 : pet.body === "round" ? 1.1 : 1;
       c.filter =
@@ -591,32 +595,31 @@ export function Share({ a, pet, record }) {
       c.shadowBlur = 8;
       c.shadowOffsetY = 4;
       for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 8)
-        c.drawImage(sticker, 50 + Math.cos(angle) * 9, 230 + Math.sin(angle) * 9);
+        c.drawImage(sticker, 120 + Math.cos(angle) * 9, 280 + Math.sin(angle) * 9);
       c.restore();
-      c.drawImage(img, ...crop, (900 - w) / 2, 250, w, h);
+      c.drawImage(img, ...crop, (900 - w) / 2 + 70, 300, w, h);
       c.filter = "none";
       c.fillStyle = "#30302e";
-      c.textAlign = "center";
-      c.font = '36px "Microsoft YaHei", sans-serif';
-      c.fillText(
-        record
-          ? (record.title || record.type).slice(0, 18)
-          : pet.homeDate ? `一起的第 ${togetherDays(pet.homeDate)} 天` : "一起收藏每一个猫咪日常",
-        450,
-        990,
-      );
-      c.fillStyle = "#858580";
-      c.font = '23px "Microsoft YaHei", sans-serif';
-      c.fillText("把陪伴，写进每一天。", 450, 1050);
+      c.save(); c.translate(90, 590); c.rotate(-.09); c.font = '32px "Microsoft YaHei", sans-serif';
+      (record ? (record.title || record.type).slice(0, 18).match(/.{1,6}/g) || [] : ["陪伴", "让每一天", "更可爱 ♡"]).forEach((text, i) => c.fillText(text, 0, i * 49)); c.restore();
+      c.strokeStyle = "#e8e7e5"; c.setLineDash([9, 8]); c.beginPath(); c.moveTo(60, 950); c.lineTo(840, 950); c.stroke(); c.setLineDash([]);
+      c.textAlign = "center"; c.font = '27px "Microsoft YaHei", sans-serif';
+      [pet.birthday?.replaceAll("-", ".") || "待填写", pet.gender || "待填写", pet.sterilized || "待填写"].forEach((value, i) => { c.fillStyle = "#30302e"; c.fillText(value, 170 + i * 280, 1020); c.fillStyle = "#858580"; c.font = '23px "Microsoft YaHei", sans-serif'; c.fillText(["生日", "性别", "绝育状态"][i], 170 + i * 280, 1060); c.font = '27px "Microsoft YaHei", sans-serif'; });
       c.font = '20px "Microsoft YaHei", sans-serif';
       c.fillText("MEOW DIARY · 喵日记", 450, 1140);
       const blob = await new Promise((resolve) =>
         canvas.toBlob(resolve, "image/png"),
       );
       if (!blob) throw Error("Image export failed");
-      downloadFile(blob, `${pet.name}-分享卡片.png`, "image/png");
-      a.toast("分享卡片已保存");
-    } catch {
+      const file = new File([blob], `${pet.name}-分享卡片.png`, { type: "image/png" });
+      if (share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: `${pet.name}的猫咪名片` });
+      } else {
+        downloadFile(blob, file.name, "image/png");
+        a.toast(share ? "已保存图片，可以发送给朋友啦" : "分享卡片已保存");
+      }
+    } catch (error) {
+      if (error.name === "AbortError") return;
       a.toast("图片暂时无法生成，请重试");
     } finally {
       setBusy(false);
@@ -624,17 +627,18 @@ export function Share({ a, pet, record }) {
   }
   return (
     <>
-      <Topbar title="分享这份可爱" onBack={a.back} />
+      <Topbar title="分享名片" onBack={a.back} />
       <div className="page-content share-page">
-        <div className={`share-card ${theme}`}>
+        <div className={`share-card ${theme}`} style={{ "--wash": palettes[theme][1] }}>
           <div className="share-heading">
             <h1>
               {pet.name}
               <Icon name="PawPrint" size={25} />
             </h1>
             <p>
-              {pet.breed} · {ageLabel(pet.birthday)}
+              {pet.breed || "猫咪"}
             </p>
+            <span className="share-age">{ageLabel(pet.birthday)}</span>
           </div>
           <span className="share-heart">
             <Icon name="Heart" size={29} />
@@ -644,11 +648,11 @@ export function Share({ a, pet, record }) {
             <h2>
               {record
                 ? record.title || record.type
-                : pet.homeDate ? `一起的第 ${togetherDays(pet.homeDate)} 天` : "一起收藏每一个猫咪日常"}
+                : "陪伴，让每一天更可爱"}
             </h2>
-            <p>把陪伴，写进每一天。</p>
+            <p>把陪伴写进每一天 ♡</p>
           </div>
-          <span className="share-logo">MEOW DIARY · 喵日记</span>
+          <div className="share-facts"><span><StickerIcon name="Cake" size={33} />{pet.birthday?.replaceAll("-", ".") || "待填写"}<small>生日</small></span><span><StickerIcon name="Cat" size={33} />{pet.gender || "待填写"}<small>性别</small></span><span><StickerIcon name="Heart" size={33} />{pet.sterilized || "待填写"}<small>绝育状态</small></span></div>
         </div>
         <div className="share-themes">
           {[
@@ -663,14 +667,14 @@ export function Share({ a, pet, record }) {
               aria-label={label}
               aria-pressed={theme === id}
             >
-              {theme === id && <Icon name="Check" size={18} />}
+              <PetArt pet={pet} />
             </button>
           ))}
         </div>
-        <Primary onClick={save} disabled={busy}>
+        <div className="share-actions"><button className="secondary" onClick={() => save()} disabled={busy}>
           <Icon name="Download" size={20} />
-          {busy ? "生成中…" : "保存分享卡片"}
-        </Primary>
+          {busy ? "生成中…" : "保存图片"}
+        </button><Primary onClick={() => save(true)} disabled={busy}><Icon name="Share2" size={21} />分享</Primary></div>
       </div>
     </>
   );

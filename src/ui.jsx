@@ -156,7 +156,22 @@ const stickerCells = {
   Bell: 7, BellRing: 7, CalendarClock: 7, ListTodo: 7, Wallet: 8,
   HeartPulse: 9, ShieldCheck: 9, Package: 10, PawPrint: 11,
 };
+// Crop only the illustrations from the approved pages. Labels and controls stay native HTML.
+const referenceIcons = {
+  BookOpen: ["diary", 58, 377, 76, 77], NotebookPen: ["diary", 58, 377, 76, 77],
+  Soup: ["feeding", 67, 401, 99, 86], Scale: ["feeding", 72, 533, 85, 88],
+  CalendarDays: ["feeding", 70, 665, 89, 85], MapPin: ["diary", 68, 1448, 61, 61],
+  Heart: ["diary", 59, 774, 53, 54],
+  Bell: ["settings", 61, 508, 81, 80], BellRing: ["settings", 61, 508, 81, 80], CalendarClock: ["settings", 61, 508, 81, 80],
+  FileDown: ["settings", 68, 614, 67, 72], Sun: ["settings", 65, 810, 77, 85],
+  Type: ["settings", 70, 927, 72, 63], Wind: ["settings", 66, 1023, 81, 69],
+  Database: ["settings", 69, 1219, 69, 73], Shield: ["settings", 67, 1320, 72, 74],
+  MessageCircleQuestion: ["settings", 65, 1520, 77, 74], Info: ["settings", 67, 1628, 75, 68],
+  Cat: ["storage", 110, 367, 117, 108], Images: ["storage", 630, 357, 124, 119], Image: ["storage", 67, 1178, 91, 89],
+};
 export function StickerIcon({ name = "PawPrint", size = 42, className = "" }) {
+  const art = referenceIcons[name];
+  if (art) return <svg className={`reference-icon ${className}`} width={size} height={size} viewBox={art.slice(1).join(" ")} aria-hidden="true"><image href={`/assets/design/${art[0]}.png`} width="853" height="1844" /></svg>;
   const cell = stickerCells[name];
   if (cell === undefined) return <span className={`drawn-icon ${className}`} style={{ width: size, height: size }} aria-hidden="true"><Icon name={name} size={Math.round(size * .65)} /></span>;
   return <span className={`sticker-icon ${className}`} aria-hidden="true" style={{ width: size, height: size, backgroundPosition: `${(cell % 3) * 50}% ${Math.floor(cell / 3) * 100 / 3}%` }} />;
@@ -245,13 +260,13 @@ export function Topbar({ title, onBack, action }) {
     </header>
   );
 }
-export function Row({ icon, label, value, onClick, tone = "peach", children }) {
+export function Row({ icon, label, value, description, onClick, tone = "peach", children }) {
   return (
     <button type="button" className="setting-row" onClick={onClick}>
       <span className={`small-icon ${tone}`}>
-        <StickerIcon name={icon} size={34} />
+        <StickerIcon name={icon} size={44} />
       </span>
-      <span className="row-label">{label}</span>
+      <span className="row-label">{label}{description && <small>{description}</small>}</span>
       {value && <span className="row-value">{value}</span>}
       {children || <Icon name="ChevronRight" size={17} className="muted" />}
     </button>
@@ -350,10 +365,11 @@ export function Segmented({ items, value, onChange }) {
     </div>
   );
 }
-export function Field({ label, children, optional }) {
+export function Field({ label, children, optional, icon }) {
   return (
     <label className="field">
       <span className="field-label">
+        {icon && <StickerIcon name={icon} size={38} />}
         {label}
         {optional && <span className="muted"> · 选填</span>}
       </span>

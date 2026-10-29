@@ -1,5 +1,11 @@
 # 素材来源与生成记录
 
+## 2026-10-29 · 全页面对齐单页设计
+
+`public/assets/design/` 中的 `diary.png`、`feeding.png`、`settings.png`、`storage.png` 分别是已确认的单页设计 06、07、16、20 的原样副本。`src/ui.jsx` 的 `referenceIcons` 只通过 SVG viewBox 取用其中的插画图标；页面文字、表单、按钮、卡片及数据均由 HTML/React 渲染。没有把整页设计图作为界面，也没有修改设计源文件。
+
+布局对应关系及浏览器回归截图见 `qa/design-alignment.html`。旧版第 13 张首次建档图由猫咪专用的第 21–33 张设计取代；保留右上角“跳过”。
+
 以下三张图片均使用内置 `image_gen` 生成，并复制到本项目。不依赖运行时生图或远程素材地址。
 
 | 文件 | 用途 | 背景 |

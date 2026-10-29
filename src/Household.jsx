@@ -4,7 +4,7 @@ import { TODAY, dateLabel } from "./data";
 import { HOUSEHOLD, money, stockQuantity, stockStatus, selectStock, adjustStock, addStockReminder, expenseSummary } from "./careData";
 
 function PetChips({ pets, value, onChange, shared = true }) {
-  return <div className="household-pets"><Chips items={[["all", "全部宠物"], ...pets.map((p) => [p.id, p.name]), ...(shared ? [[HOUSEHOLD, "家里共用"]] : [])]} value={value} onChange={onChange} /></div>;
+  return <div className="household-pets"><Chips items={[["all", "全部猫咪"], ...pets.map((p) => [p.id, p.name]), ...(shared ? [[HOUSEHOLD, "家里共用"]] : [])]} value={value} onChange={onChange} /></div>;
 }
 
 export function Stock({ a }) {

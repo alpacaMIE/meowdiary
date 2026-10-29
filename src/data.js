@@ -114,13 +114,14 @@ export function seedData() {
       {
         id: "xiaomi",
         name: "小米",
-        species: "狗",
-        breed: "金毛寻回犬",
+        species: "猫",
+        breed: "中华田园猫",
         gender: "男孩",
         birthday: "2025-03-08",
         homeDate: "2025-05-01",
         sterilized: "未绝育",
-        image: "/assets/dog.png",
+        image: "/assets/onboarding/avatars.png",
+        imageCrop: [345, 1000, 202, 202],
         tone: "original",
         body: "standard",
       },
@@ -152,9 +153,9 @@ export function seedData() {
         id: "diary-2",
         petId: "xiaomi",
         group: "note",
-        type: "遛宠",
+        type: "互动",
         date: `${dayOffset(-1)}T17:30`,
-        note: "绕着小公园走了一圈，收集了一路的落叶。",
+        note: "追着最喜欢的逗猫棒，玩了一个开心的下午。",
         photos: [],
       },
       {
@@ -208,7 +209,7 @@ export function seedData() {
         petId: "xiaomi",
         group: "weight",
         type: "称体重",
-        weight: 12.6,
+        weight: 5.6,
         unit: "kg",
         date: `${dayOffset(-3)}T08:00`,
         photos: [],
@@ -287,7 +288,7 @@ export function filterRecords(records, filters, search = "") {
     .filter(
       (r) =>
         (!filters.pets || filters.pets.includes(r.petId)) &&
-        (filters.group === "all" || r.group === filters.group) &&
+        (filters.groups?.length ? filters.groups.includes(r.group) : filters.group === "all" || r.group === filters.group) &&
         (!filters.from || r.date.slice(0, 10) >= filters.from) &&
         (!filters.to || r.date.slice(0, 10) <= filters.to) &&
         `${r.title || ""} ${r.note || ""} ${r.type} ${r.food || ""}`

@@ -134,7 +134,9 @@ export function Home({ a }) {
   );
 }
 export function Timeline({ a }) {
-  const records = filterRecords(a.filters.group === "all" ? a.data.records.filter(isLifeRecord) : a.data.records, a.filters, a.timelineSearch);
+  const [month, setMonth] = useState(TODAY.slice(0, 7));
+  const [calendarDay, setCalendarDay] = useState(TODAY);
+  const records = filterRecords(a.filters.group === "all" && !a.filters.groups?.length ? a.data.records.filter(isLifeRecord) : a.data.records, a.filters, a.timelineSearch);
   const byDate = Object.groupBy
     ? Object.groupBy(records, (r) => r.date.slice(0, 10))
     : records.reduce((obj, r) => {
@@ -144,6 +146,7 @@ export function Timeline({ a }) {
   const photos = records.flatMap((r) =>
     (r.photos || []).map((src, i) => ({ src, record: r, i })),
   );
+  const photoMonths = photos.reduce((out, photo) => { (out[photo.record.date.slice(0, 7)] ??= []).push(photo); return out; }, {});
   return (
     <div className="page-content root-page timeline-page">
       <header className="page-heading">
@@ -164,15 +167,9 @@ export function Timeline({ a }) {
       <div className="timeline-pets">
         <button
           className={`pet-scope ${a.filters.pets === null ? "selected" : ""}`}
-          onClick={() => a.setSheet({ kind: "filters" })}
+          onClick={() => a.setFilters((f) => ({ ...f, pets: null }))}
         >
-          <Icon name="PawPrint" size={17} />
-          {a.filters.pets === null
-            ? "全部宠物"
-            : a.filters.pets.length === 1
-              ? a.data.pets.find((p) => p.id === a.filters.pets[0])?.name
-              : `已选 ${a.filters.pets.length} 只`}
-          <Icon name="ChevronDown" size={13} />
+          全部
         </button>
         {a.data.pets.slice(0, 3).map((p) => (
           <button
@@ -184,6 +181,7 @@ export function Timeline({ a }) {
             <span>{p.name}</span>
           </button>
         ))}
+        {a.data.pets.length > 3 && <button className="pet-scope" onClick={() => a.setSheet({ kind: "filters" })}>+{a.data.pets.length - 3}</button>}
       </div>
       {a.showSearch && (
         <Search
@@ -198,7 +196,7 @@ export function Timeline({ a }) {
           className="filter-pill"
           onClick={() => a.setSheet({ kind: "filters" })}
         >
-          {groupLabels[a.filters.group] || "全部记录"}
+          {a.filters.groups?.length > 1 ? `${a.filters.groups.length} 种记录` : groupLabels[a.filters.group] || "全部记录"}
           <Icon name="ChevronDown" size={13} />
         </button>
         <button
@@ -208,25 +206,9 @@ export function Timeline({ a }) {
           {a.filters.from || a.filters.to ? "已选日期" : "全部时间"}
           <Icon name="ChevronDown" size={13} />
         </button>
-        <div className="view-switch">
-          <button
-            aria-label="时间线"
-            aria-pressed={a.timelineMode === "list"}
-            className={a.timelineMode === "list" ? "selected" : ""}
-            onClick={() => a.setTimelineMode("list")}
-          >
-            <Icon name="List" size={18} />
-          </button>
-          <button
-            aria-label="照片墙"
-            aria-pressed={a.timelineMode === "photos"}
-            className={a.timelineMode === "photos" ? "selected" : ""}
-            onClick={() => a.setTimelineMode("photos")}
-          >
-            <Icon name="Grid2X2" size={17} />
-          </button>
-        </div>
+        <select className="timeline-mode" aria-label="时光视图" value={a.timelineMode} onChange={e => a.setTimelineMode(e.target.value)}><option value="list">按时间线</option><option value="photos">照片墙</option><option value="calendar">日历</option></select>
       </div>
+      {a.timelineMode !== "list" && <div className="timeline-views"><Segmented items={[["list", "时间线"], ["photos", "照片墙"], ["calendar", "日历"]]} value={a.timelineMode} onChange={a.setTimelineMode} /></div>}
       {a.timelineMode === "list" ? (
         <div className="timeline-list">
           {Object.entries(byDate).map(([date, rows]) => (
@@ -286,17 +268,22 @@ export function Timeline({ a }) {
             />
           )}
         </div>
-      ) : (
+      ) : a.timelineMode === "calendar" ? <div className="calendar-wall">
+        <div className="calendar-heading"><IconButton icon="ChevronLeft" label="上个月" onClick={() => { const d = new Date(`${month}-01T12:00`); d.setMonth(d.getMonth() - 1); setMonth(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`); }} /><h2>{month.replace("-", "年")}月</h2><IconButton icon="ChevronRight" label="下个月" onClick={() => { const d = new Date(`${month}-01T12:00`); d.setMonth(d.getMonth() + 1); setMonth(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`); }} /></div>
+        <div className="calendar-grid">{["一", "二", "三", "四", "五", "六", "日"].map(day => <span key={day}>{day}</span>)}
+          {Array.from({ length: (new Date(`${month}-01T12:00`).getDay() + 6) % 7 }, (_, i) => <i key={`blank-${i}`} />)}
+          {Array.from({ length: new Date(Number(month.slice(0, 4)), Number(month.slice(5)), 0).getDate() }, (_, i) => { const date = `${month}-${String(i + 1).padStart(2, "0")}`; return <button key={date} aria-label={date} aria-pressed={calendarDay === date} className={`${calendarDay === date ? "selected" : ""} ${records.some(r => r.date.startsWith(date)) ? "has-record" : ""}`} onClick={() => setCalendarDay(date)}>{i + 1}</button>; })}
+        </div>
+        <SectionTitle>{dateLabel(calendarDay)}</SectionTitle>{records.filter(r => r.date.startsWith(calendarDay)).map(r => <RecordRow key={r.id} record={r} a={a} />)}{!records.some(r => r.date.startsWith(calendarDay)) && <Empty title="这一天还没有记录" />}
+      </div> : (
         <div className="photo-wall">
           {photos.length ? (
-            <>
+            <>{Object.entries(photoMonths).map(([month, monthPhotos]) => <section key={month}>
               <SectionTitle>
-                {a.filters.from
-                  ? dateLabel(a.filters.from) + "起"
-                  : "珍藏的瞬间"}
+                {month.replace("-", "年")}月
               </SectionTitle>
               <div className="photo-grid">
-                {photos.map(({ src, record, i }) => (
+                {monthPhotos.map(({ src, record, i }) => (
                   <button
                     key={`${record.id}-${i}`}
                     onClick={() => a.setSheet({ kind: "photo", src, record })}
@@ -312,6 +299,7 @@ export function Timeline({ a }) {
                   </button>
                 ))}
               </div>
+            </section>)}
             </>
           ) : (
             <Empty
@@ -332,7 +320,7 @@ export function Pets({ a }) {
       `${p.name}${p.breed}`.includes(a.petSearch),
   );
   return (
-    <div className="page-content root-page">
+    <div className="page-content root-page pets-page">
       <header className="page-heading">
         <h1>猫咪</h1>
         <IconButton
@@ -346,14 +334,16 @@ export function Pets({ a }) {
         onChange={a.setPetSearch}
         placeholder="搜索名字或品种"
       />
+      <div className="pet-count">全部猫咪（{a.data.pets.length}）</div>
       <div className="pet-list">
         {pets.map((p) => {
           const latest = a.data.records
             .filter((r) => r.petId === p.id)
             .sort((x, y) => y.date.localeCompare(x.date))[0];
+          const weight = a.data.records.filter(r => r.petId === p.id && r.group === "weight").sort((x, y) => y.date.localeCompare(x.date))[0];
           return (
             <button
-              className="pet-list-card"
+              className={`pet-list-card ${p.id === a.currentPet.id ? "current" : ""}`}
               key={p.id}
               onClick={() => a.go({ name: "pet", id: p.id })}
             >
@@ -371,7 +361,7 @@ export function Pets({ a }) {
                 </h2>
                 <PetMeta pet={p} />
                 <span className="pet-last-seen">
-                  {latest
+                  {weight ? <><b>{Number(weight.weight).toFixed(2)} kg</b>　|　{dateLabel(weight.date)}</> : latest
                     ? `最近记录 · ${dateLabel(latest.date)}`
                     : "故事刚刚开始"}
                 </span>

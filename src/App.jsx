@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
-import { loadData, groupLabels, defaultFilters, toggleReminder } from "./data";
+import { loadData, groupLabels, defaultFilters, toggleReminder, uid } from "./data";
 import { Icon, Empty, StickerFilters } from "./ui";
 import { Home, Timeline, Pets } from "./HomeTimeline";
 import {
@@ -43,6 +43,7 @@ export default function App() {
     toastTimer = useRef(null),
     notificationSent = useRef(new Set());
   const page = stack.at(-1),
+    hasTabs = !page || ["pet", "share", "export", "reminders"].includes(page.name),
     currentPet =
       data.pets.find((p) => p.id === data.currentPetId) || data.pets[0],
     pageKey = page
@@ -304,6 +305,8 @@ export default function App() {
           page={page}
           pets={data.pets}
           record={record}
+          records={data.records}
+          onRecord={(id) => go({ name: "record", id })}
           currentPetId={page.petId || currentPet.id}
           onBack={back}
           onSave={saveRecord}
@@ -357,13 +360,13 @@ export default function App() {
     <div className="app-shell">
       <StickerFilters />
       <main
-        className={`app-scroll ${!page && currentPet ? "with-tabs" : ""}`}
+        className={`app-scroll ${hasTabs && currentPet ? "with-tabs" : ""}`}
         ref={scroll}
         inert={sheet ? true : undefined}
       >
         {content()}
       </main>
-      {!page && currentPet && (
+      {hasTabs && currentPet && (
         <nav
           className="bottom-nav"
           aria-label="主导航"
@@ -381,7 +384,7 @@ export default function App() {
                 key={id}
                 className="nav-add"
                 aria-label="新增记录"
-                onClick={() => setSheet({ kind: "types" })}
+                onClick={() => setSheet({ kind: "quick" })}
               >
                 <Icon name="Plus" size={29} />
               </button>

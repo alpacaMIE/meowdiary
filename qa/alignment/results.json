@@ -1,0 +1,146 @@
+[
+  {
+    "width": 375,
+    "name": "01-home"
+  },
+  {
+    "width": 375,
+    "name": "05-quick-add"
+  },
+  {
+    "width": 375,
+    "name": "06-diary"
+  },
+  {
+    "width": 375,
+    "name": "07-food"
+  },
+  {
+    "width": 375,
+    "name": "02-timeline"
+  },
+  {
+    "width": 375,
+    "name": "record-detail"
+  },
+  {
+    "width": 375,
+    "name": "17-filter"
+  },
+  {
+    "width": 375,
+    "name": "12-photos"
+  },
+  {
+    "width": 375,
+    "name": "photo-viewer"
+  },
+  {
+    "width": 375,
+    "name": "calendar"
+  },
+  {
+    "width": 375,
+    "name": "09-cats"
+  },
+  {
+    "width": 375,
+    "name": "04-profile"
+  },
+  {
+    "width": 375,
+    "name": "edit-profile"
+  },
+  {
+    "width": 375,
+    "name": "03-weight"
+  },
+  {
+    "width": 375,
+    "name": "10-appearance"
+  },
+  {
+    "width": 375,
+    "name": "11-health"
+  },
+  {
+    "width": 375,
+    "name": "14-share"
+  },
+  {
+    "width": 375,
+    "name": "08-reminders"
+  },
+  {
+    "width": 375,
+    "name": "08-upcoming"
+  },
+  {
+    "width": 375,
+    "name": "16-me"
+  },
+  {
+    "width": 375,
+    "name": "18-display"
+  },
+  {
+    "width": 375,
+    "name": "18-dark"
+  },
+  {
+    "width": 375,
+    "name": "19-notifications"
+  },
+  {
+    "width": 375,
+    "name": "20-storage"
+  },
+  {
+    "width": 375,
+    "name": "15-export"
+  },
+  {
+    "width": 375,
+    "name": "stock"
+  },
+  {
+    "width": 375,
+    "name": "ledger"
+  },
+  {
+    "width": 375,
+    "name": "privacy"
+  },
+  {
+    "width": 375,
+    "name": "help"
+  },
+  {
+    "width": 375,
+    "name": "about"
+  },
+  {
+    "width": 375,
+    "name": "catalog"
+  },
+  {
+    "width": 375,
+    "name": "form-note"
+  },
+  {
+    "width": 375,
+    "name": "form-reminder"
+  },
+  {
+    "width": 375,
+    "name": "form-expense"
+  },
+  {
+    "width": 375,
+    "name": "form-symptom"
+  },
+  {
+    "width": 375,
+    "name": "form-stock"
+  }
+]

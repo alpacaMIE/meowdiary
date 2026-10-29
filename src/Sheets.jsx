@@ -14,6 +14,7 @@ import {
   Chips,
   Icon,
   TypeIcon,
+  StickerIcon,
   Primary,
   Avatar,
   Field,
@@ -22,13 +23,27 @@ import {
   Segmented,
 } from "./ui";
 
+function QuickAdd({ a }) {
+  const [petId, setPetId] = useState(a.currentPet.id);
+  return <Sheet title="新增记录" className="quick-sheet" onClose={() => a.setSheet(null)}>
+    <PetSelect pets={a.data.pets} value={petId} onChange={setPetId} />
+    <div className="quick-record-list">
+      {[["diary", "BookOpen", "写日记"], ["food", "Soup", "记喂食"], ["weight", "Scale", "记体重"], ["health", "Syringe", "疫苗 / 驱虫"]].map(([group, icon, label]) =>
+        <button key={group} className={`quick-record ${group}`} onClick={() => { a.setSheet(null); a.openForm(group, group === "health" ? "猫三联疫苗" : undefined, petId); }}>
+          <StickerIcon name={icon} size={58} /><strong>{label}</strong><Icon name="ChevronRight" />
+        </button>)}
+    </div>
+    <button className="more-records" onClick={() => a.setSheet({ kind: "types", petId })}><Icon name="Grid2X2" size={19} />更多记录类型<span>记事、提醒、记账、体征、囤货</span><Icon name="ChevronRight" size={18} /></button>
+  </Sheet>;
+}
+
 export function Catalog({ a, sheet }) {
   const [group, setGroup] = useState(sheet.group || "note"),
     [search, setSearch] = useState(""),
     [custom, setCustom] = useState(false),
     [name, setName] = useState(""),
     [icon, setIcon] = useState("PawPrint");
-  const [petId, setPetId] = useState(a.currentPet.id);
+  const [petId, setPetId] = useState(sheet.petId || a.currentPet.id);
   const items = [
     ...types[group].items,
     ...(a.data.customTypes[group] || []),
@@ -232,15 +247,15 @@ export function FilterSheet({ a }) {
     ["本月", TODAY.slice(0, 8) + "01", TODAY],
   ];
   return (
-    <Sheet title="筛选时光" onClose={() => a.setSheet(null)}>
+    <Sheet title="筛选" className="filter-sheet" onClose={() => a.setSheet(null)}>
       <div className="filter-content">
         <div className="section-title">
-          <h3>宠物</h3>
+          <h3>猫咪 <small>（可多选）</small></h3>
           <button
             className="text-button"
             onClick={() => setDraft(defaultFilters)}
           >
-            重置
+            清空
           </button>
         </div>
         <div className="pet-filter-grid">
@@ -270,16 +285,17 @@ export function FilterSheet({ a }) {
             </button>
           ))}
         </div>
-        <h3>记录类型</h3>
-        <Chips
-          items={[
-            "all",
-            ...Object.keys(groupLabels).filter((g) => g !== "reminder"),
-          ].map((g) => [g, g === "all" ? "全部" : groupLabels[g]])}
-          value={draft.group}
-          onChange={(v) => set("group", v)}
-        />
-        <h3>时间</h3>
+        <h3>记录类型 <small>（可多选）</small></h3>
+        <div className="filter-types">{["all", ...Object.keys(groupLabels).filter(g => g !== "reminder")].map(g => {
+          const selected = draft.groups?.length ? draft.groups.includes(g) : draft.group === g;
+          return <button key={g} className={`chip ${selected ? "selected" : ""}`} aria-pressed={selected} onClick={() => setDraft(d => {
+            if (g === "all") return { ...d, group: "all", groups: [] };
+            const groups = d.groups?.length ? d.groups : d.group !== "all" ? [d.group] : [];
+            const next = groups.includes(g) ? groups.filter(x => x !== g) : [...groups, g];
+            return { ...d, group: next.length === 1 ? next[0] : "all", groups: next };
+          })}><StickerIcon name={{ all: "BookOpen", diary: "BookOpen", food: "Soup", weight: "Scale", health: "Syringe", note: "NotebookPen", expense: "Wallet", symptom: "HeartPulse", stock: "Package" }[g]} size={32} />{g === "all" ? "全部" : groupLabels[g]}</button>;
+        })}</div>
+        <h3>时间范围</h3>
         <div className="chips">
           {presets.map(([label, from, to]) => (
             <button
@@ -326,7 +342,7 @@ export function FilterSheet({ a }) {
             a.setSheet(null);
           }}
         >
-          查看结果{draft.pets && ` · ${draft.pets.length} 只宠物`}
+          查看结果{draft.pets && `（${draft.pets.length} 只猫咪）`}
         </Primary>
       </div>
     </Sheet>
@@ -335,6 +351,7 @@ export function FilterSheet({ a }) {
 export function AppSheets({ a }) {
   const s = a.sheet;
   if (!s) return null;
+  if (s.kind === "quick") return <QuickAdd a={a} />;
   if (s.kind === "types") return <Catalog a={a} sheet={s} />;
   if (s.kind === "filters") return <FilterSheet a={a} />;
   if (s.kind === "pets")

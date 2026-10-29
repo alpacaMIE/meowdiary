@@ -58,7 +58,7 @@ try {
   await button("选择生日").click(); await date(2024, 4, 12); await shot("27-date"); await button("确定").click();
   await button("选择到家日").click(); await date(2024, 6, 1); await button("确定").click();
   assert.ok((await page.locator(".cat-fields").innerText()).includes("2024年4月12日"));
-  await shot("26-dates"); await button("退出建档").click(); await shot("32-exit");
+  await shot("26-dates"); await button("跳过").click(); await shot("32-exit");
   await page.keyboard.press("Tab"); await page.keyboard.press("Tab");
   assert.equal(await page.getByRole("dialog").evaluate(el => el.contains(document.activeElement)), true);
   await button("继续填写").click(); await next();
@@ -87,7 +87,7 @@ try {
   await page.reload(); await page.getByRole("navigation", { name: "主导航" }).waitFor();
   assert.equal(await button("建立猫咪档案").count(), 0);
   await button("猫咪").click(); await button("添加猫咪").first().click();
-  await page.getByLabel("猫咪名字").fill("未保存"); await button("退出建档").click(); await button("放弃建档").click();
+  await page.getByLabel("猫咪名字").fill("未保存"); await button("跳过").click(); await button("放弃建档").click();
   assert.equal((await saved()).pets.length, 2);
   await page.goto(base + "/?onboarding=1"); await button("建立猫咪档案").waitFor();
   assert.equal((await saved()).pets.length, 2);
@@ -101,13 +101,13 @@ try {
     const overflow = await page.locator(".cat-flow-scroll").evaluate(el => el.scrollWidth > el.clientWidth);
     assert.equal(overflow, false, `form overflows at ${width}`);
     await button("更换头像").click(); assert.ok(await button("使用这个头像").isVisible()); await page.keyboard.press("Escape");
-    await button("退出建档").click(); await button("放弃建档").click();
+    await button("跳过").click(); await button("放弃建档").click();
   }
   // Returning from the success screen to add another cat must also allow a clean exit.
   await page.setViewportSize({ width: 375, height: 812 });
   await button("建立猫咪档案").click(); await page.getByLabel("猫咪名字").fill("名字就够了");
   await next(); await skip(); await skip(); await button("创建档案").click(); await button("继续添加猫咪").click();
-  await button("退出建档").click(); await button("放弃建档").click(); await page.getByRole("navigation", { name: "主导航" }).waitFor();
+  await button("跳过").click(); await button("放弃建档").click(); await page.getByRole("navigation", { name: "主导航" }).waitFor();
   assert.equal((await saved()).pets.length, 3);
   assert.equal((await saved()).records.length, 1);
   assert.deepEqual(errors, []);

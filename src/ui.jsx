@@ -144,6 +144,7 @@ const Icons = {
   Download,
 };
 import { iconFor, ageLabel, petImage } from "./data";
+import typeIcons from "./type-icons.json";
 
 export function Icon({ name = "PawPrint", size = 22, ...props }) {
   const C = Icons[name] || Icons.PawPrint;
@@ -294,9 +295,10 @@ export function Empty({
   );
 }
 export function TypeIcon({ name, group, icon, size = 24 }) {
+  const asset = !icon && Object.hasOwn(typeIcons, name) ? typeIcons[name] : null;
   return (
     <span className={`type-icon ${group || "note"}`}>
-      <StickerIcon name={icon || iconFor(name, group)} size={size * 1.9} />
+      {asset ? <img className="type-sticker" src={asset} width={size * 1.9} height={size * 1.9} alt="" aria-hidden="true" decoding="async" draggable={false} /> : <StickerIcon name={icon || iconFor(name, group)} size={size * 1.9} />}
     </span>
   );
 }

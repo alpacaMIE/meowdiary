@@ -1,0 +1,142 @@
+[
+  {
+    "width": 320,
+    "group": "note",
+    "templates": 85,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "group": "reminder",
+    "templates": 25,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "group": "expense",
+    "templates": 50,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "group": "symptom",
+    "templates": 20,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "group": "stock",
+    "templates": 3,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "group": "note",
+    "templates": 85,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "group": "reminder",
+    "templates": 25,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "group": "expense",
+    "templates": 50,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "group": "symptom",
+    "templates": 20,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 375,
+    "group": "stock",
+    "templates": 3,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "group": "note",
+    "templates": 85,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "group": "reminder",
+    "templates": 25,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "group": "expense",
+    "templates": 50,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "group": "symptom",
+    "templates": 20,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 768,
+    "group": "stock",
+    "templates": 3,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "group": "note",
+    "templates": 85,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "group": "reminder",
+    "templates": 25,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "group": "expense",
+    "templates": 50,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "group": "symptom",
+    "templates": 20,
+    "loaded": true,
+    "overflow": false
+  },
+  {
+    "width": 1440,
+    "group": "stock",
+    "templates": 3,
+    "loaded": true,
+    "overflow": false
+  }
+]

@@ -49,6 +49,8 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 .drawn-icon svg { stroke-width: 1.9; }
 .type-icon, .type-icon.diary, .type-icon.food, .type-icon.weight, .type-icon.health, .type-icon.note, .type-icon.reminder, .type-icon.expense, .type-icon.symptom, .type-icon.stock { background: transparent; color: var(--ink); }
 .type-icon.custom { border: 1.5px dashed var(--border); }
+.type-sticker { display: block; object-fit: contain; flex-shrink: 0; }
+.type-grid .type-icon .type-sticker { width: 57px; height: 57px; }
 .small-icon, .peach, .blue, .pink, .sage, .yellow, .purple { background: transparent; color: var(--ink); }
 .small-icon { width: 36px; height: 36px; }
 .small-icon.blue .drawn-icon { background: #e4f0f6; }

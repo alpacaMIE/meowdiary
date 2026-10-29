@@ -12,6 +12,7 @@ import {
   TypeIcon,
 } from "./ui";
 import { TODAY, uid, groupLabels, iconFor } from "./data";
+import { HOUSEHOLD, householdPet } from "./careData";
 
 export async function readPhoto(file) {
   if (!file.type.startsWith("image/")) throw Error("请选择图片文件");
@@ -117,6 +118,8 @@ export function RecordForm({
     location: "",
     hospital: "",
     nextDate: "",
+    bookExpense: false,
+    ...page.draft,
     ...record,
   };
   const [form, setForm] = useState(initial),
@@ -136,7 +139,7 @@ export function RecordForm({
     reminder: record ? "编辑提醒" : "新建提醒",
     expense: "记一笔",
     symptom: "记录体征",
-    stock: "添加囤货",
+    stock: record ? "编辑囤货" : "添加囤货",
   }[group];
   const back = () =>
     dirty
@@ -209,7 +212,7 @@ export function RecordForm({
       >
         <div className="form-context">
           <PetSelect
-            pets={pets}
+            pets={["stock", "expense"].includes(group) || form.petId === HOUSEHOLD ? [householdPet, ...pets] : pets}
             value={form.petId}
             onChange={(v) => set("petId", v)}
           />
@@ -300,6 +303,7 @@ export function RecordForm({
             />
           </div>
         )}
+        {group === "expense" && record?.sourceStockId && <p className="link-note">这笔账来自囤货。保存修改后将独立保留。</p>}
         {group === "food" && (
           <div className="form-card">
             <Field label="食物名称">
@@ -347,11 +351,13 @@ export function RecordForm({
                 onChange={(e) => set("itemName", e.target.value)}
               />
             </Field>
-            <Field label="数量">
+            <Field label="剩余数量">
               <div className="input-with-unit">
                 <input
                   type="number"
-                  min="1"
+                  aria-label="囤货余量"
+                  min="0"
+                  step="0.01"
                   required
                   value={form.quantity}
                   onChange={(e) => set("quantity", e.target.value)}
@@ -395,6 +401,11 @@ export function RecordForm({
                 onChange={(e) => set("location", e.target.value)}
               />
             </Field>
+            {Number(form.amount) > 0 && <label className="stock-book-toggle">
+              <span>顺便记一笔账</span>
+              <input type="checkbox" checked={form.bookExpense} onChange={(e) => set("bookExpense", e.target.checked)} />
+            </label>}
+            {record?.bookExpense && !form.bookExpense && <p className="link-note">已生成的账单会保留，可在账本中编辑或删除。</p>}
           </div>
         )}
         <div className="form-card">
@@ -526,11 +537,11 @@ export function PetForm({ pet, onBack, onSave, onDelete, toast, ask }) {
     pet || {
       name: "",
       species: "猫",
-      breed: "布偶猫",
-      gender: "女孩",
+      breed: "",
+      gender: "",
       birthday: "",
-      homeDate: TODAY,
-      sterilized: "未绝育",
+      homeDate: "",
+      sterilized: "",
       image: "/assets/cat-photo.png",
       tone: "original",
       body: "standard",
@@ -555,7 +566,7 @@ export function PetForm({ pet, onBack, onSave, onDelete, toast, ask }) {
       : onBack();
   return (
     <>
-      <Topbar title={pet ? "编辑宠物资料" : "认识一位新朋友"} onBack={back} />
+      <Topbar title={pet ? "编辑猫咪资料" : "认识一位新朋友"} onBack={back} />
       <form
         className="page-content form-page pet-form"
         onSubmit={(e) => {
@@ -567,34 +578,9 @@ export function PetForm({ pet, onBack, onSave, onDelete, toast, ask }) {
           onSave({ ...form, name: form.name.trim(), id: pet?.id || uid() });
         }}
       >
-        <div className="species-picker">
-          {[
-            ["猫", "猫咪", "/assets/cat-photo.png"],
-            ["狗", "狗狗", "/assets/dog.png"],
-          ].map(([id, label, img]) => (
-            <button
-              key={id}
-              type="button"
-              className={form.species === id ? "selected" : ""}
-              aria-pressed={form.species === id}
-              onClick={() => {
-                set("species", id);
-                set("image", img);
-                set("breed", id === "猫" ? "布偶猫" : "金毛寻回犬");
-              }}
-            >
-              <img src={img} alt={label} />
-              <strong>{label}</strong>
-              {form.species === id && (
-                <span className="selected-check">
-                  <Icon name="Check" size={13} />
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
+        <div className="cat-edit-portrait"><PetArt pet={form} /></div>
         <div className="form-card">
-          <Field label="宠物名字">
+          <Field label="猫咪名字">
             <input
               autoComplete="off"
               required
@@ -613,10 +599,7 @@ export function PetForm({ pet, onBack, onSave, onDelete, toast, ask }) {
               placeholder="填写品种"
             />
             <datalist id="breeds">
-              {(form.species === "猫"
-                ? ["布偶猫", "英国短毛猫", "中华田园猫", "暹罗猫", "缅因猫"]
-                : ["金毛寻回犬", "柴犬", "柯基", "拉布拉多", "中华田园犬"]
-              ).map((x) => (
+              {["布偶猫", "英国短毛猫", "中华田园猫", "暹罗猫", "缅因猫"].map((x) => (
                 <option key={x}>{x}</option>
               ))}
             </datalist>
@@ -626,9 +609,10 @@ export function PetForm({ pet, onBack, onSave, onDelete, toast, ask }) {
               value={form.gender}
               onChange={(e) => set("gender", e.target.value)}
             >
+              <option value="">暂未填写</option>
               <option>女孩</option>
               <option>男孩</option>
-              <option>未知</option>
+              <option>不确定</option>
             </select>
           </Field>
           <Field label="生日" optional>
@@ -639,11 +623,11 @@ export function PetForm({ pet, onBack, onSave, onDelete, toast, ask }) {
               onChange={(e) => set("birthday", e.target.value)}
             />
           </Field>
-          <Field label="到家日">
+          <Field label="到家日" optional>
             <input
               type="date"
-              required
               max={TODAY}
+              min={form.birthday || undefined}
               value={form.homeDate}
               onChange={(e) => set("homeDate", e.target.value)}
             />
@@ -653,9 +637,11 @@ export function PetForm({ pet, onBack, onSave, onDelete, toast, ask }) {
               value={form.sterilized}
               onChange={(e) => set("sterilized", e.target.value)}
             >
+              <option value="">暂未填写</option>
               <option>未绝育</option>
               <option>已绝育</option>
               <option>计划中</option>
+              <option>不确定</option>
             </select>
           </Field>
         </div>

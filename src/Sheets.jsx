@@ -364,7 +364,7 @@ export function AppSheets({ a }) {
             }}
           >
             <Icon name="Plus" />
-            添加宠物
+            添加猫咪
           </button>
         </div>
       </Sheet>

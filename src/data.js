@@ -29,7 +29,7 @@ export const ageLabel = (birthday) => {
     : `${months}个月`;
 };
 export const togetherDays = (date) =>
-  Math.max(1, Math.floor((new Date(TODAY) - new Date(date)) / 86400000) + 1);
+  date && Number.isFinite(new Date(date).getTime()) ? Math.max(1, Math.floor((new Date(TODAY) - new Date(date)) / 86400000) + 1) : null;
 export const GROUPS = ["note", "reminder", "expense", "symptom", "stock"];
 export const groupLabels = {
   diary: "日记",
@@ -253,6 +253,9 @@ export function seedData() {
     currentPetId: "tuanzi",
   };
 }
+export function emptyData() {
+  return { pets: [], records: [], reminders: [], customTypes: {}, settings: { theme: "system", notifications: false }, currentPetId: null };
+}
 export function loadData() {
   try {
     const raw = JSON.parse(localStorage.getItem("meow-diary-v1"));
@@ -262,11 +265,11 @@ export function loadData() {
       Array.isArray(raw.records) &&
       Array.isArray(raw.reminders)
     )
-      return { ...seedData(), ...raw };
+      return { ...emptyData(), ...raw, settings: { ...emptyData().settings, ...raw.settings } };
   } catch {
     /* A blocked or corrupt store must not prevent opening the app. */
   }
-  return seedData();
+  return emptyData();
 }
 export function summary(record) {
   if (record.group === "food")

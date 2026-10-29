@@ -30,3 +30,16 @@ Use case: illustration-story. Asset type: wide editorial diary photo for a warm 
 - `public/assets/sticker-icons.png`：3 列 × 4 行的手绘图标图集，通过 CSS 单元格定位显示。完整提示词见 `Design/风格探索/sticker-icons.prompt.md`。
 
 两张素材均为 AI 生成，保存在项目内，无远程资源依赖。旧版猫咪图保留用于历史资料兼容，新界面将原猫咪素材路径映射到 `cat-photo.png`。
+
+## 2026-10-29 · 猫咪建档引导
+
+`public/assets/onboarding/` 中的四张 PNG 是已确认 imagegen 设计稿的完整副本，未重新生成或修改原图：
+
+| 文件 | 对应设计稿 | 用途 |
+| --- | --- | --- |
+| `welcome.png` | `21_猫咪建档_开始.png` | 首次启动的猫咪与档案贴纸 |
+| `avatars.png` | `23_猫咪建档_头像选择.png` | 橘猫、狸花、三花、黑猫、白猫头像 |
+| `dates.png` | `26_猫咪建档_生日与到家日.png` | 猫咪与日历贴纸 |
+| `health.png` | `28_猫咪建档_健康资料.png` | 猫咪与体重秤贴纸 |
+
+页面通过 SVG viewBox 显示需要的插画区域，文字、按钮、表单和弹层均由 HTML/CSS 构建。默认布偶头像仍使用 `cat-photo.png`。完整原始提示词见 `Design/单页图/猫咪建档_生成记录.json`。头像区域信息随档案保存，并用于首页、详情、切换面板和分享图片，确保选中的头像一致。

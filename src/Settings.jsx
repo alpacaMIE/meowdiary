@@ -22,8 +22,11 @@ import {
   petImage,
   reminderRepeatLabel,
 } from "./data";
+import { selectStock, stockStatus, expenseSummary, money, householdPet } from "./careData";
 
 export function Me({ a }) {
+  const stock = selectStock(a.data.records), due = stock.filter((r) => stockStatus(r).days <= 30).length;
+  const spent = expenseSummary(a.data.records).spent;
   return (
     <div className="page-content root-page me-page">
       <header className="page-heading">
@@ -39,12 +42,14 @@ export function Me({ a }) {
         <Avatar pet={a.currentPet} size={61} />
         <div>
           <h2>{a.currentPet.name}的日常</h2>
-          <p>陪伴的第 {togetherDays(a.currentPet.homeDate)} 天</p>
+          <p>{a.currentPet.homeDate ? `陪伴的第 ${togetherDays(a.currentPet.homeDate)} 天` : "一起收藏每一个猫咪日常"}</p>
         </div>
         <Icon name="ChevronRight" size={18} />
       </button>
       <SectionTitle>常用功能</SectionTitle>
       <div className="card settings-group">
+        <Row icon="Package" label="囤货清单" tone="sage" value={`${stock.length} 件${due ? ` · ${due} 件临期` : ""}`} onClick={() => a.go({ name: "stock" })} />
+        <Row icon="Wallet" label="养宠账本" tone="yellow" value={`本月 ¥${money(spent)}`} onClick={() => a.go({ name: "ledger" })} />
         <Row
           icon="Bell"
           label="提醒与待办"
@@ -345,7 +350,8 @@ export function Storage({ a }) {
   );
 }
 export function Export({ a }) {
-  const [petIds, setPetIds] = useState(a.data.pets.map((p) => p.id)),
+  const exportPets = [...a.data.pets, householdPet];
+  const [petIds, setPetIds] = useState(exportPets.map((p) => p.id)),
     [groups, setGroups] = useState(["profile", ...Object.keys(groupLabels)]),
     [from, setFrom] = useState(""),
     [to, setTo] = useState("");
@@ -400,7 +406,7 @@ export function Export({ a }) {
         );
     records.forEach((r) =>
       rows.push([
-        a.data.pets.find((p) => p.id === r.petId)?.name,
+        exportPets.find((p) => p.id === r.petId)?.name,
         groupLabels[r.group],
         r.type,
         r.date,
@@ -414,7 +420,7 @@ export function Export({ a }) {
               : "",
         r.group === "expense" ? "元" : r.unit || "",
         r.note || "",
-        "",
+        r.group === "expense" ? r.direction || "支出" : "",
         "",
         r.expiry || "",
         r.location || "",
@@ -422,7 +428,7 @@ export function Export({ a }) {
     );
     reminders.forEach((r) =>
       rows.push([
-        a.data.pets.find((p) => p.id === r.petId)?.name,
+        exportPets.find((p) => p.id === r.petId)?.name,
         "提醒",
         r.type,
         r.date,
@@ -453,7 +459,7 @@ export function Export({ a }) {
         </div>
         <SectionTitle>宠物</SectionTitle>
         <div className="export-pets">
-          {a.data.pets.map((p) => (
+          {exportPets.map((p) => (
             <button
               key={p.id}
               className={petIds.includes(p.id) ? "selected" : ""}
@@ -559,7 +565,8 @@ export function Share({ a, pet, record }) {
         i.onerror = reject;
         i.src = petImage(pet);
       });
-      const ratio = Math.min(700 / img.width, 650 / img.height);
+      const crop = !pet.photo && pet.imageCrop ? pet.imageCrop : [0, 0, img.width, img.height];
+      const ratio = Math.min(700 / crop[2], 650 / crop[3]);
       const bodyScale =
         pet.body === "slim" ? 0.9 : pet.body === "round" ? 1.1 : 1;
       c.filter =
@@ -572,9 +579,9 @@ export function Share({ a, pet, record }) {
       sticker.width = 800;
       sticker.height = 700;
       const sc = sticker.getContext("2d");
-      const w = img.width * ratio * bodyScale, h = img.height * ratio;
+      const w = crop[2] * ratio * bodyScale, h = crop[3] * ratio;
       const left = (800 - w) / 2;
-      sc.drawImage(img, left, 20, w, h);
+      sc.drawImage(img, ...crop, left, 20, w, h);
       sc.globalCompositeOperation = "source-in";
       sc.fillStyle = "white";
       sc.fillRect(0, 0, 800, 700);
@@ -586,7 +593,7 @@ export function Share({ a, pet, record }) {
       for (let angle = 0; angle < Math.PI * 2; angle += Math.PI / 8)
         c.drawImage(sticker, 50 + Math.cos(angle) * 9, 230 + Math.sin(angle) * 9);
       c.restore();
-      c.drawImage(img, (900 - w) / 2, 250, w, h);
+      c.drawImage(img, ...crop, (900 - w) / 2, 250, w, h);
       c.filter = "none";
       c.fillStyle = "#30302e";
       c.textAlign = "center";
@@ -594,7 +601,7 @@ export function Share({ a, pet, record }) {
       c.fillText(
         record
           ? (record.title || record.type).slice(0, 18)
-          : `一起的第 ${togetherDays(pet.homeDate)} 天`,
+          : pet.homeDate ? `一起的第 ${togetherDays(pet.homeDate)} 天` : "一起收藏每一个猫咪日常",
         450,
         990,
       );
@@ -637,7 +644,7 @@ export function Share({ a, pet, record }) {
             <h2>
               {record
                 ? record.title || record.type
-                : `一起的第 ${togetherDays(pet.homeDate)} 天`}
+                : pet.homeDate ? `一起的第 ${togetherDays(pet.homeDate)} 天` : "一起收藏每一个猫咪日常"}
             </h2>
             <p>把陪伴，写进每一天。</p>
           </div>
@@ -686,7 +693,7 @@ export function Info({ a, name }) {
             <p>把陪伴，写进每一天。</p>
             <div className="version-pill">前端原型 · v1.0.0</div>
             <p className="small-note">
-              初始内容为演示资料。
+              从一份猫咪档案开始记录。
               <br />
               使用 React 构建，资料保存在当前浏览器。
             </p>

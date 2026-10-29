@@ -26,6 +26,7 @@ import {
   reminderRepeatLabel,
 } from "./data";
 import { RecordRow } from "./HomeTimeline";
+import { symptomSummary, householdPet, deleteManagedRecord } from "./careData";
 
 export function PetDetail({ a, pet }) {
   const records = a.data.records
@@ -36,7 +37,7 @@ export function PetDetail({ a, pet }) {
   return (
     <>
       <Topbar
-        title="宠物档案"
+        title="猫咪档案"
         onBack={a.back}
         action={
           <button
@@ -71,7 +72,7 @@ export function PetDetail({ a, pet }) {
           <PetMeta pet={pet} />
           <p className="together-line">
             <Icon name="Heart" size={14} />
-            我们已经一起度过 {togetherDays(pet.homeDate)} 天
+            {pet.homeDate ? `我们已经一起度过 ${togetherDays(pet.homeDate)} 天` : "一起收藏每一个猫咪日常"}
           </p>
         </div>
         <div className="profile-stats">
@@ -92,7 +93,7 @@ export function PetDetail({ a, pet }) {
               "次",
               "food",
             ],
-            ["ShieldCheck", "健康护理", count("health"), "条", "health"],
+            ["ShieldCheck", "健康护理", count("health") + count("symptom"), "条", "health"],
             ["BookOpen", "日记", count("diary"), "篇", "diary"],
           ].map(([icon, label, value, unit, target]) => (
             <button
@@ -161,6 +162,7 @@ export function PetDetail({ a, pet }) {
             tone="sage"
             onClick={() => a.go({ name: "share", id: pet.id })}
           />
+          <Row icon="Wallet" label="它的花销" tone="yellow" onClick={() => a.go({ name: "ledger", id: pet.id })} />
         </div>
       </div>
     </>
@@ -418,7 +420,7 @@ export function Reminders({ a, petId }) {
                   <TypeIcon name={r.type} group="reminder" />
                   <span>
                     <strong>
-                      {p?.name} · {r.type}
+                      {p?.name || "家里共用"} · {r.type}
                     </strong>
                     <small>
                       {dateLabel(r.date)} {r.date.slice(11, 16)}
@@ -475,11 +477,12 @@ export function Reminders({ a, petId }) {
   );
 }
 export function Health({ a, pet }) {
-  const [mode, setMode] = useState("vaccine");
+  const [mode, setMode] = useState(a.page?.mode || "vaccine");
+  const symptoms = symptomSummary(a.data.records, pet.id);
   const isMatch = (r) =>
-    mode === "vaccine" ? /疫苗|联$/.test(r.type) : /驱/.test(r.type);
+    mode === "symptom" ? r.group === "symptom" : r.group !== "symptom" && (mode === "vaccine" ? /疫苗|联$/.test(r.type) : /驱/.test(r.type));
   const records = a.data.records
-    .filter((r) => r.petId === pet.id && isMatch(r))
+    .filter((r) => r.petId === pet.id && (mode === "symptom" || ["health", "note"].includes(r.group)) && isMatch(r))
     .sort((x, y) => y.date.localeCompare(x.date));
   const reminders = a.data.reminders.filter(
     (r) => r.petId === pet.id && !r.done && isMatch(r),
@@ -499,10 +502,21 @@ export function Health({ a, pet }) {
           items={[
             ["vaccine", "疫苗"],
             ["deworm", "驱虫"],
+            ["symptom", "体征"],
           ]}
           value={mode}
-          onChange={setMode}
+          onChange={(value) => { setMode(value); a.updatePage({ mode: value }); }}
         />
+        {mode === "symptom" ? <>
+          <section className="symptom-summary card"><Icon name="NotebookPen" size={23} /><div><h2>近 30 天记录 <b>{symptoms.count}</b> 次</h2>{symptoms.types.length > 0 && <p>{symptoms.types.map(([type, count]) => `${type} ${count}`).join(" / ")}</p>}</div></section>
+          <div className="symptom-list">
+            {records.map((r) => <article className="symptom-entry" key={r.id}>
+              <button className="symptom-copy" onClick={() => a.go({ name: "record", id: r.id })}><span className="symptom-label">{r.type}</span><time>{r.date.slice(0, 10)} · {r.date.slice(11, 16)}</time>{r.note && <p>{r.note}</p>}</button>
+              {!!r.photos?.length && <div className="symptom-photos">{r.photos.map((src, i) => <button key={i} aria-label={`查看${r.type}照片 ${i + 1}`} onClick={() => a.setSheet({ kind: "photo", src, record: r })}><img src={src} alt={`${r.type}现场照片 ${i + 1}`} /></button>)}</div>}
+            </article>)}
+            {!records.length && <Empty icon="HeartPulse" title="还没有体征记录" />}
+          </div>
+        </> : <>
         <SectionTitle>下次计划</SectionTitle>
         <div className="card">
           {reminders.map((r) => (
@@ -534,24 +548,25 @@ export function Health({ a, pet }) {
             <Empty icon="ShieldCheck" title="还没有护理记录" />
           )}
         </div>
+        </>}
         <Primary
           onClick={() =>
             a.openForm(
-              "health",
-              mode === "vaccine" ? "猫三联疫苗" : "外驱",
+              mode === "symptom" ? "symptom" : "health",
+              mode === "symptom" ? "软便" : mode === "vaccine" ? "猫三联疫苗" : "外驱",
               pet.id,
             )
           }
         >
           <Icon name="Plus" size={21} />
-          添加护理记录
+          {mode === "symptom" ? "记录体征" : "添加护理记录"}
         </Primary>
       </div>
     </>
   );
 }
 export function RecordDetail({ a, record: r }) {
-  const pet = a.data.pets.find((p) => p.id === r.petId);
+  const pet = a.data.pets.find((p) => p.id === r.petId) || householdPet;
   return (
     <>
       <Topbar
@@ -608,26 +623,23 @@ export function RecordDetail({ a, record: r }) {
           </button>
         ))}
         <div className="record-actions">
-          <button
+          {pet.id !== householdPet.id && <button
             className="secondary"
             onClick={() => a.go({ name: "share", id: pet.id, recordId: r.id })}
           >
             <Icon name="Share2" size={19} />
             分享卡片
-          </button>
+          </button>}
           <IconButton
             icon="Trash2"
             label="删除记录"
             onClick={() =>
               a.ask(
                 "删除这条记录？",
-                "删除后，这条记录及其照片会从时光中移除。",
+                r.group === "stock" ? "这件囤货和关联提醒将被移除，已生成的账单会保留。" : "删除后，这条记录及其照片会被移除。",
                 () => {
                   if (
-                    a.commit({
-                      ...a.data,
-                      records: a.data.records.filter((x) => x.id !== r.id),
-                    })
+                    a.commit(deleteManagedRecord(a.data, r))
                   ) {
                     a.back();
                     a.toast("记录已删除");

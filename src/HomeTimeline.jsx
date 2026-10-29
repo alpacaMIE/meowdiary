@@ -21,6 +21,7 @@ import {
   groupLabels,
   filterRecords,
 } from "./data";
+import { isLifeRecord } from "./careData";
 
 export function RecordRow({ record, a }) {
   return (
@@ -49,7 +50,7 @@ export function Home({ a }) {
   const pet = a.currentPet;
   const [pat, setPat] = useState({ petId: "", count: 0 });
   const patted = pat.petId === pet.id && pat.count > 0;
-  const records = a.data.records.filter((r) => r.petId === pet.id)
+  const records = a.data.records.filter((r) => r.petId === pet.id && isLifeRecord(r))
     .sort((x, y) => y.date.localeCompare(x.date));
   const reminders = a.data.reminders.filter((r) => r.petId === pet.id);
   const due = reminders.filter((r) => r.date.slice(0, 10) <= TODAY && (!r.done || r.date.startsWith(TODAY)));
@@ -89,8 +90,8 @@ export function Home({ a }) {
         <button className="pet-speech taped-note" onClick={touchPet} aria-live="polite">
           {patted ? ["呼噜呼噜～", "贴贴！", "再摸一下"][((pat.count || 1) - 1) % 3] : "摸摸我"}
         </button>
-        <button className="together-sticker" aria-label={`查看${pet.name}的档案，已陪伴${togetherDays(pet.homeDate)}天`} onClick={() => a.go({ name: "pet", id: pet.id })}>
-          <Icon name="PawPrint" size={19} /><strong>{togetherDays(pet.homeDate)}<small>天</small></strong>
+        <button className="together-sticker" aria-label={`查看${pet.name}的档案`} onClick={() => a.go({ name: "pet", id: pet.id })}>
+          <Icon name="PawPrint" size={19} /><strong>{pet.homeDate ? <>{togetherDays(pet.homeDate)}<small>天</small></> : "档案"}</strong>
         </button>
       </section>
       <div className="page-content home-content">
@@ -133,7 +134,7 @@ export function Home({ a }) {
   );
 }
 export function Timeline({ a }) {
-  const records = filterRecords(a.data.records, a.filters, a.timelineSearch);
+  const records = filterRecords(a.filters.group === "all" ? a.data.records.filter(isLifeRecord) : a.data.records, a.filters, a.timelineSearch);
   const byDate = Object.groupBy
     ? Object.groupBy(records, (r) => r.date.slice(0, 10))
     : records.reduce((obj, r) => {
@@ -328,16 +329,15 @@ export function Timeline({ a }) {
 export function Pets({ a }) {
   const pets = a.data.pets.filter(
     (p) =>
-      (a.petSpecies === "全部" || p.species === a.petSpecies) &&
       `${p.name}${p.breed}`.includes(a.petSearch),
   );
   return (
     <div className="page-content root-page">
       <header className="page-heading">
-        <h1>宠物</h1>
+        <h1>猫咪</h1>
         <IconButton
           icon="Plus"
-          label="添加宠物"
+          label="添加猫咪"
           onClick={() => a.go({ name: "pet-form" })}
         />
       </header>
@@ -345,11 +345,6 @@ export function Pets({ a }) {
         value={a.petSearch}
         onChange={a.setPetSearch}
         placeholder="搜索名字或品种"
-      />
-      <Chips
-        items={["全部", "猫", "狗"]}
-        value={a.petSpecies}
-        onChange={a.setPetSpecies}
       />
       <div className="pet-list">
         {pets.map((p) => {
@@ -392,7 +387,7 @@ export function Pets({ a }) {
         onClick={() => a.go({ name: "pet-form" })}
       >
         <Icon name="Plus" size={19} />
-        添加宠物
+        添加猫咪
       </button>
     </div>
   );

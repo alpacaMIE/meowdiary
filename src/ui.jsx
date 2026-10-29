@@ -5,6 +5,10 @@ import {
   ChevronLeft,
   ChevronDown,
   Plus,
+  Minus,
+  MapPin,
+  BellPlus,
+  ArrowUpRight,
   X,
   Check,
   Heart,
@@ -69,6 +73,10 @@ import {
 } from "lucide-react";
 const Icons = {
   Search: SearchIcon,
+  Minus,
+  MapPin,
+  BellPlus,
+  ArrowUpRight,
   PawPrint,
   ChevronRight,
   ChevronLeft,
@@ -179,16 +187,20 @@ export function IconButton({ icon, label, onClick, ...props }) {
     </button>
   );
 }
+export function PetPhoto({ pet, className = "" }) {
+  if (pet?.imageCrop && !pet.photo) return <svg className={className} viewBox={pet.imageCrop.join(" ")} role="img" aria-label={pet.name || "猫咪"}><image href={petImage(pet)} width="891" height="1765" /></svg>;
+  return <img src={petImage(pet)} alt={pet?.name || "猫咪"} className={className} />;
+}
 export function Avatar({ pet, size = 44, className = "", ...props }) {
+  if (pet?.id === "household") return <span className={`avatar household-avatar ${className}`} style={{ width: size, height: size }} aria-label="家里共用" {...props}><Icon name="House" size={size * .55} /></span>;
   return (
     <span
       className={`avatar ${className}`}
       style={{ width: size, height: size }}
       {...props}
     >
-      <img
-        src={petImage(pet)}
-        alt={pet?.name || "宠物"}
+      <PetPhoto
+        pet={pet}
         className={
           pet?.photo ? "real-photo" : `tone-${pet?.tone || "original"}`
         }
@@ -198,10 +210,9 @@ export function Avatar({ pet, size = 44, className = "", ...props }) {
 }
 export function PetArt({ pet, className = "" }) {
   return (
-    <img
+    <PetPhoto
       className={`pet-art ${className} tone-${pet?.tone || "original"} body-${pet?.body || "standard"} ${pet?.photo ? "uploaded-pet" : ""}`}
-      src={petImage(pet)}
-      alt={pet?.name || "宠物"}
+      pet={pet}
     />
   );
 }
@@ -422,7 +433,7 @@ export function Sheet({ title, onClose, children, className = "" }) {
 export function PetMeta({ pet }) {
   return (
     <p className="pet-meta">
-      {pet.breed} <span>·</span> {ageLabel(pet.birthday)}
+      {pet.breed || "品种待补充"} <span>·</span> {ageLabel(pet.birthday)}
     </p>
   );
 }

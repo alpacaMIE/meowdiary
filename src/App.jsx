@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
-import { loadData, uid, TODAY, groupLabels, defaultFilters, toggleReminder } from "./data";
-import { Icon, Empty, Primary, PetArt, StickerFilters } from "./ui";
+import { loadData, groupLabels, defaultFilters, toggleReminder } from "./data";
+import { Icon, Empty, StickerFilters } from "./ui";
 import { Home, Timeline, Pets } from "./HomeTimeline";
 import {
   PetDetail,
@@ -21,6 +21,10 @@ import {
 } from "./Settings";
 import { RecordForm, PetForm } from "./Forms";
 import { AppSheets } from "./Sheets";
+import { Stock, Ledger } from "./Household";
+import { saveManagedRecord } from "./careData";
+import CatOnboarding from "./CatOnboarding";
+import { addCatProfile } from "./catProfile";
 
 export default function App() {
   const [data, setData] = useState(loadData),
@@ -28,12 +32,12 @@ export default function App() {
     [stack, setStack] = useState([]),
     [sheet, setSheet] = useState(null),
     [message, setMessage] = useState("");
+  const [onboarding, setOnboarding] = useState(() => !data.pets.length || new URLSearchParams(location.search).has("onboarding") ? { welcome: true } : null);
   const [filters, setFilters] = useState(defaultFilters),
     [timelineMode, setTimelineMode] = useState("list"),
     [timelineSearch, setTimelineSearch] = useState(""),
     [showSearch, setShowSearch] = useState(false),
-    [petSearch, setPetSearch] = useState(""),
-    [petSpecies, setPetSpecies] = useState("全部");
+    [petSearch, setPetSearch] = useState("");
   const scroll = useRef(null),
     positions = useRef({}),
     toastTimer = useRef(null),
@@ -49,13 +53,13 @@ export default function App() {
     setMessage(text);
     toastTimer.current = setTimeout(() => setMessage(""), 3200);
   };
-  function commit(next) {
+  function commit(next, { silent = false } = {}) {
     try {
       localStorage.setItem("meow-diary-v1", JSON.stringify(next));
       setData(next);
       return true;
     } catch {
-      toast("本地空间不足或不可用，请减少照片后重试；填写内容已保留");
+      if (!silent) toast("本地空间不足或不可用，请减少照片后重试；填写内容已保留");
       return false;
     }
   }
@@ -63,6 +67,11 @@ export default function App() {
     positions.current[pageKey] = scroll.current?.scrollTop || 0;
   };
   const go = (next) => {
+    if (next.name === "pet-form" && !next.id) {
+      setSheet(null);
+      setOnboarding({ welcome: false });
+      return;
+    }
     remember();
     setStack((s) => [...s, next]);
   };
@@ -114,7 +123,7 @@ export default function App() {
           notificationSent.current.add(r.id);
           try {
             new Notification(
-              `${data.pets.find((p) => p.id === r.petId)?.name} · ${r.type}`,
+              `${data.pets.find((p) => p.id === r.petId)?.name || "家里共用"} · ${r.type}`,
               { body: r.note || "一件等你完成的小事", icon: "/favicon.svg" },
             );
           } catch {
@@ -162,12 +171,7 @@ export default function App() {
           : [...data.reminders, saved],
       };
     } else {
-      next = {
-        ...data,
-        records: data.records.some((r) => r.id === record.id)
-          ? data.records.map((r) => (r.id === record.id ? record : r))
-          : [...data.records, record],
-      };
+      next = saveManagedRecord(data, record);
       if (
         record.group === "health" &&
         record.nextDate &&
@@ -200,7 +204,7 @@ export default function App() {
     }
     if (!commit(next)) return false;
     back();
-    toast(record.group === "reminder" ? "提醒已安排" : "这一刻，记住了");
+    toast(({ reminder: "提醒已安排", stock: "囤货已保存", expense: "账单已保存" })[record.group] || "这一刻，记住了");
     return true;
   }
   function savePet(pet) {
@@ -232,6 +236,7 @@ export default function App() {
     ) {
       setFilters(defaultFilters);
       setStack([]);
+      if (!pets.length) setOnboarding({ welcome: true });
       toast("档案已删除");
     }
   }
@@ -241,6 +246,8 @@ export default function App() {
         toast(reminder.done ? "已恢复待办" : reminder.repeat && reminder.repeat !== "从不" ? "完成啦，下次提醒已安排" : "完成一件小事！");
     },
     data,
+    page,
+    updatePage: (patch) => setStack((s) => s.map((p, i) => i === s.length - 1 ? { ...p, ...patch } : p)),
     currentPet,
     commit,
     tab,
@@ -265,8 +272,6 @@ export default function App() {
     setShowSearch,
     petSearch,
     setPetSearch,
-    petSpecies,
-    setPetSpecies,
   };
   function content() {
     if (page?.name === "pet-form")
@@ -280,23 +285,6 @@ export default function App() {
           toast={toast}
           ask={ask}
         />
-      );
-    if (!currentPet)
-      return (
-        <div className="welcome">
-          <div className="welcome-art">
-            <PetArt pet={{ image: "/assets/cat.png" }} />
-          </div>
-          <h1>
-            我们的故事，
-            <br />
-            从今天开始。
-          </h1>
-          <Primary onClick={() => go({ name: "pet-form" })}>
-            添加第一只宠物
-            <Icon name="Plus" size={20} />
-          </Primary>
-        </div>
       );
     if (!page)
       return {
@@ -328,6 +316,8 @@ export default function App() {
     if (page.name === "pet") return <PetDetail a={a} pet={pet} />;
     if (page.name === "weight") return <Weight a={a} pet={pet} />;
     if (page.name === "health") return <Health a={a} pet={pet} />;
+    if (page.name === "stock") return <Stock a={a} />;
+    if (page.name === "ledger") return <Ledger a={a} initialPetId={page.id || "all"} />;
     if (page.name === "appearance-pet")
       return <PetAppearance a={a} pet={pet} />;
     if (page.name === "reminders") return <Reminders a={a} petId={page.id} />;
@@ -353,6 +343,16 @@ export default function App() {
     if (page.name === "storage") return <Storage a={a} />;
     return <Info a={a} name={page.name} />;
   }
+  function finishOnboarding() {
+    const url = new URL(location.href); url.searchParams.delete("onboarding"); history.replaceState(null, "", url);
+    setOnboarding(null); setStack([]); setTab("home");
+  }
+  if (onboarding || !currentPet) return <div className="app-shell"><StickerFilters /><CatOnboarding
+    welcome={onboarding?.welcome ?? true}
+    onSave={draft => commit(addCatProfile(data, draft), { silent: true })}
+    onFinish={finishOnboarding}
+    onExit={() => { if (data.pets.length) finishOnboarding(); else setOnboarding({ welcome: true }); }}
+  /></div>;
   return (
     <div className="app-shell">
       <StickerFilters />
@@ -373,7 +373,7 @@ export default function App() {
             ["home", "House", "首页"],
             ["timeline", "Clock3", "时光"],
             ["add", "Plus", "新增记录"],
-            ["pets", "Cat", "宠物"],
+            ["pets", "Cat", "猫咪"],
             ["me", "UserRound", "我的"],
           ].map(([id, icon, label]) =>
             id === "add" ? (

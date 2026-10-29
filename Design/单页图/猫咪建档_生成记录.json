@@ -1,0 +1,209 @@
+{
+  "date": "2026-10-29",
+  "method": "内置 image_gen",
+  "scope": "猫咪专属的首次建档完整流程设计",
+  "primary_flow": [
+    21,
+    22,
+    26,
+    28,
+    29,
+    30
+  ],
+  "count": 13,
+  "rules": [
+    "首启仅保留单张建档入口，不再有功能介绍轮播。",
+    "所有新页面只面向猫咪，不提供猫狗或物种选择。",
+    "只有猫咪名字必填；头像使用默认猫咪，品种、性别、生日、到家日、绝育状态、体重均可稍后补充。",
+    "图中团子、布偶猫、女孩、日期、已绝育及4.2 kg为演示填写值，不是新用户默认信息。",
+    "生日与到家日复用27号日期选择器；切换标题与选中字段，未填写状态保持空白。",
+    "相册为系统照片选择器，选择后进入24号应用内裁剪页；取消或选择失败时保留原头像。",
+    "确认页显示最终资料，未填可选项显示未填写；只有保存成功才进入完成页。",
+    "创建成功时将填写的体重作为第一笔体重记录；不产生其他默认历史记录。",
+    "31为名字必填校验；日期限制未来日期，体重限制正数，同样使用行内错误样式。",
+    "32为有未保存修改时的退出确认，不声称自动保存草稿；33为可重试保存失败，保留输入。",
+    "本组是设计图片，替代旧版首启设计方向；现有13_首次建档.png为历史设计，后续实现以21—33号为准。"
+  ],
+  "screens": [
+    {
+      "number": 21,
+      "title": "开始",
+      "section": "主流程",
+      "file": "21_猫咪建档_开始.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-8fdf5371-b83d-4584-b48f-cd0ab4bb06ae.png",
+      "edit_reference": "../历史参考图/2026-10-29_首启引导旧稿/23_首次启动引导_建立档案.png",
+      "actions": {
+        "建立猫咪档案": 22
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nThis is the single first-launch welcome/entry page, NOT a three-page marketing carousel. Retain top-left paw + “喵日记”, remove top-right “跳过”. In the central hero preserve the paper profile card and ragdoll kitten, remove the golden puppy entirely and rebalance the paper/kitten composition. Change the paper title from “宠物档案” to “猫咪档案”; keep the “小主角” name tag, pencil and tiny hearts. Main headline exactly “先认识一下你家猫咪”. Two centered gray lines: “建立猫咪的专属档案” / “从今天开始，记录你们的故事”. Remove all three pagination dots and use that whitespace for one small gray helper: “只需一个名字，就能开始”. Large yellow bottom CTA exactly “建立猫咪档案” with right arrow. Nothing else. This supersedes the previous introduction; there are no feature-tour pages."
+    },
+    {
+      "number": 22,
+      "title": "基本资料",
+      "section": "主流程",
+      "file": "22_猫咪建档_基本资料.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-3ed0b5c9-7ce9-451d-9cf7-f164032ea26f.png",
+      "edit_reference": "../历史参考图/2026-10-29_首启引导旧稿/23_首次启动引导_建立档案.png",
+      "actions": {
+        "下一步": 26,
+        "更换头像": 23,
+        "品种": 25,
+        "名字未填写时继续": 31,
+        "关闭或放弃返回": 32
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nCompletely replace the large welcome hero and headline with an elegant useful form. Topbar below status bar: back chevron, centered “建立猫咪档案”, small close X at right. Under it a compact three-stage progress stepper labeled “基本资料” — “纪念日” — “健康资料”; first step active in yellow, other two gray.\nBold heading “它叫什么名字？” and small helper “先认识一下你家的小可爱”.\nCentered round avatar about 94 logical px across using the photographic ragdoll face with white sticker edge and tiny yellow camera badge. Text below “更换头像”.\nForm below with generous spacing:\nlabel “猫咪名字” plus a small required asterisk; rounded rectangular input with the filled value “团子”, subtle “2 / 20” counter at right.\nlabel “品种 · 选填”; rounded selector row with value “布偶猫” and chevron.\nlabel “性别 · 选填”; three equal outlined pills “男孩” / “女孩” / “不确定”, only “女孩” selected in soft yellow.\nSmall muted helper “照片、品种和性别都可稍后补充”.\nFixed bottom wide primary button “下一步” and right arrow. No giant illustration, no species selector, no dog, no keyboard in this state. The form occupies the page comfortably, with clear usable spacing."
+    },
+    {
+      "number": 23,
+      "title": "头像选择",
+      "section": "辅助页面",
+      "file": "23_猫咪建档_头像选择.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-0cfce874-8f4d-493f-81c3-1960afe9ea62.png",
+      "edit_reference": "22_猫咪建档_基本资料.png",
+      "actions": {
+        "使用这个头像": 22,
+        "从相册选择照片": "系统照片选择器 → 24",
+        "关闭": 22
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nKeep the supplied basic-information form underneath, recognizable but dimmed. Show the avatar selection as a large bottom sheet covering about 70% of screen with white background, rounded top corners, subtle handle. Header “选择猫咪头像” and close X. Short gray helper “选一张贴纸，或用它的照片”.\nTwo rows by three columns of SIX photographic CAT face cutout options on pale neutral circles: ragdoll, orange tabby, brown tabby, calico, black cat, white cat. Short exact labels “布偶” “橘猫” “狸花” “三花” “黑猫” “白猫”. The ragdoll tile has thin yellow selection ring and a small check. Every animal is a cat. Below the grid one full-width outlined camera row “从相册选择照片” with chevron. At bottom yellow primary “使用这个头像”. Do not render an operating-system photo library or permissions dialogue. Do not add a second bottom action from the dimmed form on top of this sheet."
+    },
+    {
+      "number": 24,
+      "title": "照片裁剪",
+      "section": "辅助页面",
+      "file": "24_猫咪建档_照片裁剪.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-41e8536f-db6c-4d36-b5db-1ccbba8fdbd2.png",
+      "edit_reference": "22_猫咪建档_基本资料.png",
+      "actions": {
+        "完成": 22,
+        "取消": 23
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nReplace the form with the app's full-screen avatar crop editor in the SAME brand. Topbar left “取消”, centered title “调整猫咪头像”, right “完成” in dark charcoal. White background. Helper “拖动照片，让小脸居中”. Center a large square real photograph of the SAME blue-eyed ragdoll kitten in a softly lit home, about 78% of screen width. Overlay a clear centered circular avatar crop boundary; the photo outside the circle is slightly darkened, the visible cat face is centered and intact, preserve realistic anatomy. Subtle rule-of-thirds crop guides within the circle. Beneath crop area a horizontal zoom slider with minus and plus endpoints, then two understated icon buttons labeled “旋转” and “重置”. Near bottom small muted caption “仅用于猫咪头像”. No name fields, no stepper, no species picker, no extra giant CTA. Leave generous white margins."
+    },
+    {
+      "number": 25,
+      "title": "品种选择",
+      "section": "辅助页面",
+      "file": "25_猫咪建档_品种选择.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-f00ba136-88a1-4921-a41c-3dadfb2c39b0.png",
+      "edit_reference": "22_猫咪建档_基本资料.png",
+      "actions": {
+        "确定": 22,
+        "关闭": 22
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nKeep the supplied basic-information form underneath but dimmed. Open a white bottom sheet covering about 82% height, handle, title “选择猫咪品种”, close X. A rounded search field with magnifier and placeholder exactly “搜索品种，或输入名称”. Small section label “常见品种”. Clean single-column selector rows with small subtle CAT silhouette icons and exact labels: “中华田园猫”, “英国短毛猫”, “美国短毛猫”, “布偶猫”, “暹罗猫”, “缅因猫”, “波斯猫”, “不确定”. Only “布偶猫” is selected, shown with a yellow checkmark on the right. Other rows unselected; no dog breeds. Fine dividers and comfortable touch-row height. At bottom full-width yellow button “确定”. No keyboard in this state and no arbitrary breed value prefilled in search."
+    },
+    {
+      "number": 26,
+      "title": "生日与到家日",
+      "section": "主流程",
+      "file": "26_猫咪建档_生日与到家日.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-e17136fb-fb22-4dd5-aa30-6739357ee6e1.png",
+      "edit_reference": "22_猫咪建档_基本资料.png",
+      "actions": {
+        "生日": 27,
+        "到家日": "27（标题切换为“选择到家日”）",
+        "下一步": 28,
+        "暂不填写，稍后完善": 28,
+        "关闭": 32
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nTransform the basic form into step 2, preserving the topbar, status bar, stepper positioning, side margins and footer-button system. Topbar “建立猫咪档案”, back chevron and close X. Three steps “基本资料” — “纪念日” — “健康资料”; first complete check, second active yellow, third gray.\nHeading “记住特别的日子”, helper “不记得具体日期，也没关系”.\nA modest small sticker illustration above the fields: the same ragdoll peeking from behind a tiny yellow desk calendar and coral heart, no giant hero.\nTwo spacious rounded selection cards:\nfirst label “生日 · 选填”, calendar icon, value “2024年4月12日”, right chevron, small helper below the value “它来到世界的那一天”;\nsecond label “到家日 · 选填”, little house icon, value “2024年6月1日”, right chevron, small helper “你们开始一起生活的日子”.\nBelow cards quiet centered text link “暂不填写，稍后完善”.\nAt bottom wide yellow “下一步” arrow. Do not assume today's date as the home date. No age calculator or approximate-age mode. Only these two optional dates."
+    },
+    {
+      "number": 27,
+      "title": "日期选择",
+      "section": "辅助页面",
+      "file": "27_猫咪建档_日期选择.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-4dc15cf1-e761-4c97-83c7-6039f88babf8.png",
+      "edit_reference": "26_猫咪建档_生日与到家日.png",
+      "actions": {
+        "确定": 26,
+        "取消": 26,
+        "暂不填写": "清空当前日期并返回 26"
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nKeep the supplied step-2 birthday/home-date form underneath, dimmed. Open a white bottom date-picker sheet roughly lower 48% of screen, rounded upper corners. Top row “取消” left, centered “选择生日”, “确定” right. Three large evenly spaced vertical wheel columns labeled “年” “月” “日”. Center highlighted row exactly “2024” / “4” / “12”; row above “2023” / “3” / “11”; row below “2025” / “5” / “13”; other farther rows may be lightly faded. Keep values aligned and readable, pale yellow selection band. Below wheels a subtle text action “暂不填写” in gray. Bottom safe-area space. No second yellow next-step button inside the sheet, no calendar grid, no dog. This is the shared date picker component, shown in the birthday context."
+    },
+    {
+      "number": 28,
+      "title": "健康资料",
+      "section": "主流程",
+      "file": "28_猫咪建档_健康资料.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-d1a7d7b9-50ab-4cbb-9af9-08575b397550.png",
+      "edit_reference": "22_猫咪建档_基本资料.png",
+      "actions": {
+        "预览档案": 29,
+        "暂不填写，稍后完善": 29,
+        "关闭": 32
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nTransform the form into step 3, preserving topbar and compact stepper layout. Topbar “建立猫咪档案”, back arrow and close X. Steps “基本资料” — “纪念日” — “健康资料”; first and second complete check, third active yellow.\nHeading “多了解它一点”, helper “这些资料，都可以以后再补充”.\nA small tasteful ragdoll-and-sage-scale sticker at upper middle, compact enough to leave comfortable room for the form.\nlabel “绝育状态 · 选填”. A 2×2 grid of four rounded outlined selection chips: “未绝育”, “已绝育”, “计划中”, “不确定”. Only “已绝育” selected with pale yellow background and small check.\nlabel “当前体重 · 选填”. White rounded input row, large clear value “4.2”, unit “kg” on right, tiny sage scale icon at left. Helper “记录第一笔体重，之后方便对比”.\nBelow form a quiet text link “暂不填写，稍后完善”.\nBottom wide yellow action “预览档案” with right arrow. No health diagnoses, recommendations, vaccines, extra questions or mandatory status default."
+    },
+    {
+      "number": 29,
+      "title": "档案确认",
+      "section": "主流程",
+      "file": "29_猫咪建档_档案确认.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-ed6d652c-6d8d-41ec-ba19-0ffac17d7390.png",
+      "edit_reference": "22_猫咪建档_基本资料.png",
+      "actions": {
+        "创建档案": 30,
+        "保存失败": 33,
+        "修改基本资料": 22,
+        "修改日期": 26,
+        "修改健康资料": 28,
+        "关闭": 32
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nReplace the edit form with the final profile-review page, before any profile is saved. Topbar back chevron and centered “确认猫咪档案”, small close X at right. No three-stage progress stepper here.\nHeading “看看有没有漏掉的”, short helper “创建后也可以随时修改”.\nA compact warm paper profile card with tiny yellow tape, the same photographic ragdoll portrait, large name “团子” and small “布偶猫 · 女孩”. Quiet edit pencil link “修改”.\nBelow, white rounded divided summary cards with exact label/value pairs, aligned cleanly, each group a tiny edit chevron: “生日” — “2024年4月12日”; “到家日” — “2024年6月1日”; “绝育状态” — “已绝育”; “当前体重” — “4.2 kg”. Small footer helper “体重将保存为第一笔体重记录”.\nFixed bottom wide yellow primary “创建档案” with small check icon. No claim that the profile is already created; no success badge yet. Calm readable full-screen confirmation layout."
+    },
+    {
+      "number": 30,
+      "title": "建档完成",
+      "section": "主流程",
+      "file": "30_猫咪建档_建档完成.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-8d62613f-f2ae-4dbc-816e-89fc3813203f.png",
+      "edit_reference": "21_猫咪建档_开始.png",
+      "actions": {
+        "进入喵日记": "已建档首页",
+        "继续添加猫咪": 22
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nTransform the welcome page into the AFTER-SAVE success page. Keep status bar, brand paw + “喵日记” at top, white background and bottom home indicator. No stepper or carousel dots. Hero: one lovable photographic ragdoll kitten sitting with a small completed paper card and a prominent yellow circular check sticker, a few tiny sage/coral confetti strokes only. Paper title “猫咪档案” and name “团子”. There must be ONLY ONE CAT and NO dog.\nCentered large headline “团子的档案建好啦”. Two smaller gray lines “从今天开始” / “一起收藏每一个猫咪日常”.\nAt bottom large yellow primary button “进入喵日记” with right arrow. Below it quiet text action “继续添加猫咪”. Clear space for both actions and the home indicator. Do not show invented reminders, default past records, fake health data, or cloud-sync statements."
+    },
+    {
+      "number": 31,
+      "title": "名字未填校验",
+      "section": "校验与异常状态",
+      "file": "31_猫咪建档_名字未填校验.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-344e65df-a215-44d3-958f-b1b0e7b1b095.png",
+      "edit_reference": "22_猫咪建档_基本资料.png",
+      "actions": {
+        "填写有效名字后继续": 26
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nMake a localized validation-state variant of the supplied basic-information page. Preserve the ENTIRE layout, avatar, step 1 progress, breed, gender choices, spacing, button and all chrome. Change ONLY the name input state: remove the entered “团子”, show placeholder “怎么称呼这位小可爱？”, change counter to “0 / 20”, outline that input in a restrained coral-red and put a small warning icon with exact inline error “请先给猫咪起个名字” immediately underneath. Keep all other optional inputs and selected choices as they were. The bottom yellow “下一步” button remains present, representing an attempted submission that did not advance. No modal, no toast, no keyboard. Ensure the error has enough space and doesn't overlap the next label."
+    },
+    {
+      "number": 32,
+      "title": "退出确认",
+      "section": "校验与异常状态",
+      "file": "32_猫咪建档_退出确认.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-88b8f469-9256-417c-9446-b117c2067fbe.png",
+      "edit_reference": "26_猫咪建档_生日与到家日.png",
+      "actions": {
+        "继续填写": "返回触发弹窗的页面",
+        "放弃建档": 21
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nShow the supplied date-information step dimmed under a centered confirmation dialog. Do not alter the underlying form values. Dialog white with softly irregular rounded corners and subtle charcoal edge, roughly 84% viewport width. Small hand-drawn unfinished notebook + cat paw icon. Clear title exactly “暂时离开建档？”. Body exactly “离开后，未保存的资料将丢失。”. Two stacked large buttons: yellow primary “继续填写”; quiet white outlined secondary “放弃建档” with muted coral text. No autosaved-draft promises, no permanent-delete warning, no success illustration. Leave generous readable padding."
+    },
+    {
+      "number": 33,
+      "title": "保存失败",
+      "section": "校验与异常状态",
+      "file": "33_猫咪建档_保存失败.png",
+      "generated_source": "C:\\Users\\myg\\.codex\\generated_images\\01a18285-2e42-7153-81bb-806a2f1c9e0d\\exec-d7a97c28-2642-4883-8e88-59814089b2ac.png",
+      "edit_reference": "29_猫咪建档_档案确认.png",
+      "actions": {
+        "重新保存": "成功 → 30；仍失败则保留输入",
+        "返回检查": 29
+      },
+      "prompt": "Use case: ui-mockup / precise-object-edit. Edit the supplied mobile design into the specified screen of the SAME “喵日记” CAT-ONLY profile creation flow. Exactly ONE complete flat portrait screen, preserve the input pixel dimensions/aspect ratio, white background, 9:41 status bar, bottom home indicator, rounded charcoal Chinese type, yellow #FFDB68 hand-drawn outlined primary buttons, light gray thin card borders, tiny coral/sage accents and realistic ragdoll photographic cutouts with white sticker edging. No device frame or presentation surround. Cats ONLY: remove EVERY dog, puppy, dog choice, species picker and generic pet language. Use “猫咪” in all new UI copy. No bottom tab navigation, no marketing carousel dots, no login, no permissions popup, no unrelated illustrations, no watermark. Professional usable mobile UI, logical 24px side margins, at least 44px touch targets, readable field labels, ample whitespace, no clipping. Text must be rendered accurately in Simplified Chinese. Use real form controls and clear hierarchy. Keep all actionable controls above the bottom safe area.\nShow the supplied final profile-review page dimmed under a centered recoverable save-failure dialog. Preserve all entered cat information visibly underneath. White softly rounded dialog approximately 84% viewport width, small restrained coral exclamation sticker with paper icon. Title exactly “暂时没能保存”. Body two lines exactly “填写的资料还在” / “请重试，或返回检查资料”. Yellow primary button “重新保存”; quiet secondary “返回检查”. No success checkmark, no loss-of-data statement, no cloud/server/account claims, no extra CTA. Keep the same typography and yellow primary button system as the input. This is an error-state design, not a successful profile."
+    }
+  ]
+}
